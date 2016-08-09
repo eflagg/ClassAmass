@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Emily's Online Courses</title>
+</head>
+<body>
+	Here are your results:
+	{% for course in relevent_courses %}
+	{{ course.title }}
+	<ul>
+		<li>{{ course.title }}</li>
+	</ul>
+	{% endfor %}
+</body>
+</html>
