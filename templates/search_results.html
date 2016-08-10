@@ -5,10 +5,18 @@
 </head>
 <body>
 	Here are your results:
-	{% for course in relevent_courses %}
-	{{ course.title }}
+	{% for course in courses %}
 	<ul>
 		<li>{{ course.title }}</li>
+		<li>{{ course.description }}</li>
+		<li>{{ course.workload }}</li>
+		<li>{{ course.languages }}</li>
+		<li>{{ course.has_certificates }}</li>
+		<li>{{ course.is_paid }}</li>
+		<li>{{ course.categories }}</li>
+		<li>{{ course.source }}</li>
+		<li>{{ course.type_course }}</li>
+		<li><a href="{{ course.url }}">Go to this course</a></li>
 	</ul>
 	{% endfor %}
 </body>

@@ -8,6 +8,7 @@ import requests
 
 COURSERA_URL = "https://api.coursera.org/api/courses.v1?fields=primaryLanguages,certificates,description,startDate,workload,domainTypes"
 
+# COURSERA_URL_NEXT = "https://api.coursera.org/api/courses.v1?start={}&fields=primaryLanguages,certificates,description,startDate,workload,domainTypes"
 
 def load_coursera_courses():
     """Load courses from api responses into database."""
@@ -23,19 +24,35 @@ def load_coursera_courses():
     elements = rdict['elements']
 
     for element in elements:
-		title = element.get('name', '<unknown>')
-		type_course = element.get('courseType', '<unknown>')
-		description = element.get('description', '<unknown>')
-		# languages = element.get('primaryLanguages', '<unknown>')
-		workload = element.get('workload', '<unknown>')
-		# certificates = element.get('certificates', None)
-		# keywords = [element.get('domainTypes', None ['domainId'], element['domainTypes']['domainId']]
-		source = "Coursera"
+        title = element.get('name', '<unknown>')
+        type_course = element.get('courseType', '<unknown>')
+        description = element.get('description', '<unknown>')
 
-		course = Course(title=title, type_course=type_course, source=source,
-						description=description, workload=workload)
+        slug = element.get('slug', '<unknown>')
+        url = "https://www.coursera.org/learn/" + slug
 
-		db.session.add(course)
+        languages = element.get('primaryLanguages', '<unknown>')
+        languages =  ", ".join(languages)
+
+        workload = element.get('workload', '<unknown>')
+		
+        if element['certificates']:
+            has_certificates = True
+        else:
+            has_certificates = False
+		
+        categories = element.get('domainTypes', '<unknown>')
+        for category in categories:
+            categories = [category.get('domainId', '<unknown>'), category.get('subdomainId', '<unknown>')]
+            categories = ", ".join(categories)
+
+        source = "Coursera"
+
+        course = Course(title=title, type_course=type_course, description=description, url=url,
+                        languages=languages, workload=workload, has_certificates=has_certificates,
+                        categories=categories, source=source)
+
+        db.session.add(course)
 
     db.session.commit()
 

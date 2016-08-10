@@ -19,17 +19,20 @@ def index_page():
 
 @app.route("/search-results")
 def show_search_results():
-	"""Show search results based on user input parameters."""
+    """Show search results based on user input parameters."""
 
-	phrase = request.args.get("search-phrase")
+    phrase = request.args.get("search-phrase")
 
-	# relevent_courses = db.session.query(Course).filter(Course.source == "Coursera").all()
+    try:
+        relevent_courses = db.session.query(Course).filter(Course.title.like('%' + phrase + '%')).all()
 
-	relevent_courses = Course.query.all()
+    except UnicodeEncodeError:
+        pass
 
-	print relevent_courses
 
-	return render_template("search_results.html", courses=relevent_courses)
+    # print relevent_courses
+
+    return render_template("search_results.html", courses=relevent_courses)
 
 
 # @app.route("/search-results")

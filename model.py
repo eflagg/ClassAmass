@@ -9,17 +9,20 @@ class Course(db.Model):
 
 	id = db.Column(db.Integer, primary_key=True)
 	title = db.Column(db.String, nullable=False)
-	category = db.Column(db.String(100))
-	subcategory = db.Column(db.String(100))
-	is_free = db.Column(db.Boolean, default=True)
+	categories = db.Column(db.String(1000))
+	# subcategory = db.Column(db.String(100))
+	is_paid = db.Column(db.Boolean, default=False)
 	price = db.Column(db.Integer)
 	type_course = db.Column(db.String)
+	dates = db.Column(db.DateTime)
 	level = db.Column(db.String)
 	source = db.Column(db.String)
-	description = db.Column(db.String(1000))
-	languages = db.Column(db.String(5))
+	description = db.Column(db.String(5000))
+	languages = db.Column(db.String(10))
 	workload = db.Column(db.String(200))
-	# certificates = db.Column(String)
+	has_certificates = db.Column(db.Boolean, default=False)
+	url = db.Column(db.String(500))
+	picture = db.Column(db.String(500))
 
 	def __repr__(self):
 		return "<Course id=%s, title=%s>" % (self.id, self.title)
@@ -34,7 +37,7 @@ def init_app():
 
 
 def connect_to_db(app):
-    """Connect the database to our Flask app."""
+    """Connect the database to Flask app."""
 
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres:///courses'
     app.config['SQLALCHEMY_ECHO'] = True
