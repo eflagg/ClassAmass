@@ -7,10 +7,15 @@
 	Here are your results:
 	{% for course in courses %}
 	<ul>
+		<li><img src="{{ course.picture }}"></li>
 		<li>{{ course.title }}</li>
 		<li>{{ course.description }}</li>
+		{% for partner in course.partners %}
+		<li>{{ partner.name }}</li>
+		{% endfor %}
 		<li>{{ course.workload }}</li>
 		<li>{{ course.languages }}</li>
+		<li>{{ course.subtitiles }}</li>
 		<li>{{ course.has_certificates }}</li>
 		<li>{{ course.is_paid }}</li>
 		<li>{{ course.categories }}</li>

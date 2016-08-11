@@ -29,9 +29,6 @@ def show_search_results():
     except UnicodeEncodeError:
         pass
 
-
-    # print relevent_courses
-
     return render_template("search_results.html", courses=relevent_courses)
 
 

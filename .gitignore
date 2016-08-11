@@ -1,3 +1,5 @@
 /env/
 *.pyc
 secrets.sh
+api_tests.py
+test_for_loop.py
