@@ -17,7 +17,7 @@ class Course(db.Model):
 	# dates = db.Column(db.DateTime)
 	# level = db.Column(db.String)
 	source = db.Column(db.String, nullable=False)
-	description = db.Column(db.String(5000))
+	description = db.Column(db.String(10000))
 	languages = db.Column(db.String(50))
 	subtitles = db.Column(db.String(50))
 	workload = db.Column(db.String(200))
