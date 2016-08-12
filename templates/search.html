@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Emily's Online Courses Search Results{% endblock %}
+{% block content %}
+	Further filter your results:
+	<form action='/search/filters'>
+		Price: <input type="number" name="price"></input><br>
+		Language: <input type="checkbox" name="language" value="en">English</input>
+		<input type="checkbox" name="languages" value="zh">Chinese</input>
+		<input type="checkbox" name="languages" value="fr">French</input>
+		<input type="checkbox" name="languages" value="sp">Spanish</input><br>
+		Instructor or Self led: <input type="radio" name="coursetype" value="self">Self Led</input>
+		<input type="radio" name="coursetype" value="instructor">Instructor Led</input><br>
+		Certificates: <input type="radio" name="certificates" value="yes">Has Certificates</input>
+		<input type="radio" name="certificates" value="no">No Certificates</input><br>
+		<input type="submit" value="Apply Filters"></input>
+	</form>
+	Here are your results:
+	{% for course in courses %}
+	<ul>
+		<li><img src="{{ course.picture }}"></li>
+		<li>{{ course.title }}</li>
+		<li>{{ course.description }}</li>
+		<li><a href="{{ course.url }}">Go to this course</a></li>
+	</ul>
+	{% endfor %}
+{% endblock %}

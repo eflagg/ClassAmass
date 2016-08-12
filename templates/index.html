@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title></title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block title %}Emily's Online Courses{% endblock %}
+{% block content %}
 	<h1>What do you want to learn about?</h1>
-	<form action='/search-results'>
+	<form action='/search'>
 		<input type="text" name="search-phrase"></input>
 		<input type="submit" value="Find a class!"></input>
 	</form>
-</body>
-</html>
+{% endblock %}

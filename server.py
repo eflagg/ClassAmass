@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 
 import requests
 from model import connect_to_db, db, Course
@@ -17,7 +17,7 @@ def index_page():
     return render_template("index.html")
 
 
-@app.route("/search-results")
+@app.route("/search")
 def show_search_results():
     """Show search results based on user input parameters."""
 
@@ -25,11 +25,66 @@ def show_search_results():
 
     try:
         relevent_courses = db.session.query(Course).filter(Course.title.like('%' + phrase + '%')).all()
+        session['search-phrase'] = phrase
 
     except UnicodeEncodeError:
         pass
 
-    return render_template("search_results.html", courses=relevent_courses)
+    return render_template("search.html", courses=relevent_courses)
+
+
+@app.route("/search/filters")
+def filter_results_by_price():
+    """ Filter resuts based on user input parameters."""
+
+    q = db.session.query(Course)
+    phrase = session['search-phrase']
+
+    price = request.args.get("price")
+    languages = request.args.get("languages")
+    # course_type = request.args.get("classtype")
+    # certificates = request.args.get("certificates")
+    
+    phrase_arg = Course.title.like('%' + phrase + '%')
+
+    if price:
+        price_arg = Course.price <= price
+    else:
+        price_arg = ""
+
+    if languages:
+        language_arg = Course.languages.like('%' + languages + '%')
+    else:
+        language_arg = ""
+
+    # if course_type:
+    #     type_arg = Course.languages.like('%' + languages + '%')
+    # else:
+    #     language_arg = ""
+
+    # if certificates:
+    #     certificate_arg = Course.has_certificates = True
+    # else:
+    #     language_arg = ""
+
+    args = (phrase_arg, price_arg, language_arg)
+
+    query = q.filter(*args)
+    print query
+
+    try:
+        relevent_courses = query.all()
+    except UnicodeEncodeError:
+        pass
+
+    return render_template("search.html", courses=relevent_courses)
+
+
+# @app.route("/search/filters")
+# def filter_results_by_language():
+#     """ Filter resuts based on user input parameters."""
+
+
 
 
 # @app.route("/search-results")

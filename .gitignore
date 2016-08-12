@@ -2,3 +2,4 @@
 *.pyc
 secrets.sh
 api_tests.py
+udemy_seed.py

@@ -10,15 +10,18 @@
 		<li><img src="{{ course.picture }}"></li>
 		<li>{{ course.title }}</li>
 		<li>{{ course.description }}</li>
+		{% if course.partners %}
 		{% for partner in course.partners %}
 		<li>{{ partner.name }}</li>
 		{% endfor %}
+		{% endif %}
 		<li>{{ course.workload }}</li>
-		<li>{{ course.languages }}</li>
-		<li>{{ course.subtitiles }}</li>
-		<li>{{ course.has_certificates }}</li>
-		<li>{{ course.is_paid }}</li>
-		<li>{{ course.categories }}</li>
+		<li>Lang: {{ course.languages }}</li>
+		<li>Subt: {{ course.subtitiles }}</li>
+		<li>Certs: {{ course.has_certificates }}</li>
+		<li>${{ course.price }}</li>
+		<li>Cat: {{ course.category }}</li>
+		<li>Subcat: {{ course.subcategory }}</li>
 		<li>{{ course.source }}</li>
 		<li>{{ course.type_course }}</li>
 		<li><a href="{{ course.url }}">Go to this course</a></li>

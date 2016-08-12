@@ -10,20 +10,20 @@ class Course(db.Model):
 	course_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 	title = db.Column(db.String, nullable=False)
 	category = db.Column(db.String(1000))
-	subcategory = db.Column(db.String(100))
-	is_paid = db.Column(db.Boolean, default=False)
-	price = db.Column(db.Integer)
+	subcategory = db.Column(db.String(1000))
+	price = db.Column(db.Integer, default=0)
 	type_course = db.Column(db.String)
-	# dates = db.Column(db.DateTime)
-	# level = db.Column(db.String)
 	source = db.Column(db.String, nullable=False)
 	description = db.Column(db.String(10000))
-	languages = db.Column(db.String(50))
-	subtitles = db.Column(db.String(50))
+	languages = db.Column(db.String(100))
+	subtitles = db.Column(db.String(100))
 	workload = db.Column(db.String(200))
 	has_certificates = db.Column(db.Boolean, default=False)
 	url = db.Column(db.String(500))
 	picture = db.Column(db.String(500))
+	# dates = db.Column(db.DateTime)
+	# level = db.Column(db.String)
+	# is_paid = db.Column(db.Boolean, default=False)
 
 	def __repr__(self):
 		return "<Course id=%s, title=%s>" % (self.course_id, self.title)
@@ -68,17 +68,13 @@ def init_app():
 def connect_to_db(app):
     """Connect the database to Flask app."""
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres:///courses2'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres:///courses'
     app.config['SQLALCHEMY_ECHO'] = True
     db.app = app
     db.init_app(app)
 
 
 if __name__ == "__main__":
-    # As a convenience, if we run this module interactively, it will leave
-    # you in a state of being able to work with the database directly.
-
-    # So that we can use Flask-SQLAlchemy, we'll make a Flask app
     from flask import Flask
 
     app = Flask(__name__)

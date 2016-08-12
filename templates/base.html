@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Emily's Online Courses</title>
+	<title>{% block title %}Emily's Online Courses{% endblock %}</title>
+	<link rel="stylesheet" href="/static/css/styles.css">
+	<script src="http://code.jquery.com/jquery.js"></script>
 </head>
 <body>
-
+	{% block content %}CONTENT GOES HERE{% endblock %}
 </body>
 </html>
