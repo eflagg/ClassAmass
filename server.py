@@ -45,17 +45,19 @@ def filter_results_by_price():
     # course_type = request.args.get("classtype")
     # certificates = request.args.get("certificates")
     
-    phrase_arg = Course.title.like('%' + phrase + '%')
+    args = [Course.title.like('%' + phrase + '%')]
 
     if price:
         price_arg = Course.price <= price
+        args.append(price_arg)
     else:
-        price_arg = ""
+        price_arg = None
 
     if languages:
         language_arg = Course.languages.like('%' + languages + '%')
+        args.append(language_arg)
     else:
-        language_arg = ""
+        language_arg = None
 
     # if course_type:
     #     type_arg = Course.languages.like('%' + languages + '%')
@@ -66,8 +68,8 @@ def filter_results_by_price():
     #     certificate_arg = Course.has_certificates = True
     # else:
     #     language_arg = ""
-
-    args = (phrase_arg, price_arg, language_arg)
+    args = tuple(args)
+    print args
 
     query = q.filter(*args)
     print query
