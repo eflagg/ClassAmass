@@ -1,26 +1,77 @@
 {% extends 'base.html' %}
 {% block title %}Emily's Online Courses Search Results{% endblock %}
 {% block content %}
-	Further filter your results:
+	{% if courses == [] %}
+	Sorry, we couldn't find any courses that matched your description! <a href="/">Try another search.</a>
+	{% else %}
+	Refine your search:
 	<form action='/search/filters'>
-		Price: <input type="number" name="price"></input><br>
-		Language: <input type="checkbox" name="language" value="en">English</input>
-		<input type="checkbox" name="languages" value="zh">Chinese</input>
+		Max Price: <input type="number" name="price" id="price-field"></input><br>
+		<label id="language-field">Language: 
+		<input type="checkbox" name="languages" value="en" >English</input>
+		<input type="checkbox" id="chinese" name="languages" value="zh-CN">Chinese (simplified)</input>
 		<input type="checkbox" name="languages" value="fr">French</input>
-		<input type="checkbox" name="languages" value="sp">Spanish</input><br>
+		<input type="checkbox" name="languages" value="ja">Japonese</input>
+		<input type="checkbox" name="languages" value="ko">Korean</input>
+		<input type="checkbox" name="languages" value="pt">Portuguese</input>
+		<input type="checkbox" name="languages" value="it">Italian</input>
+		<input type="checkbox" name="languages" value="tr">Turkish</input>
+		<input type="checkbox" name="languages" value="ru">Russian</input>
+		<input type="checkbox" name="languages" value="zh-TW">Chinese (traditional)</input>
+		<input type="checkbox" name="languages" value="ar">Arabic</input>
+		<input type="checkbox" name="languages" value="de">German</input>
+		<input type="checkbox" name="languages" value="sv">Swedish</input>
+		<input type="checkbox" name="languages" value="he">Hebrew</input>
+		<input type="checkbox" name="languages" value="de">Dutch</input>
+		<input type="checkbox" name="languages" value="es">Spanish</input></label><br>
 		Instructor or Self led: <input type="radio" name="coursetype" value="self">Self Led</input>
 		<input type="radio" name="coursetype" value="instructor">Instructor Led</input><br>
 		Certificates: <input type="radio" name="certificates" value="yes">Has Certificates</input>
-		<input type="radio" name="certificates" value="no">No Certificates</input><br>
-		<input type="submit" value="Apply Filters"></input>
+		<input type="radio" name="certificates" value="no-pref">No Preference</input><br>
+		Source: <input type="checkbox" name="source" value="coursera" >Coursera</input>
+		<input type="checkbox" name="source" value="udemy">Udemy</input><br>
+		University: <input type="checkbox" name="university" value="Harvard">Harvard University</input>
+		<input type="checkbox" name="university" value="Stanford">Stanford University</input>
+		<input type="checkbox" name="university" value="MIT">MIT University</input>
+		<input type="checkbox" name="university" value="Yale">Yale University</input><br>
+		<input type="submit" id="filters" value="Apply Filters" ></input>
 	</form>
-	Here are your results:
+	<div id="search-results">Here are your search results:
 	{% for course in courses %}
 	<ul>
-		<li><img src="{{ course.picture }}"></li>
+		<img src="{{ course.picture }}" height="75" width="100">
 		<li>{{ course.title }}</li>
 		<li>{{ course.description }}</li>
+		{% if course.workload %}
+		<li>{{ course.workload }}</li>
+		{% endif %}
+		{% if course.price != 0 %}
+		<li>${{ course.price }}</li>
+		{% else %}
+		<li>Free</li>
+		{% endif %}
 		<li><a href="{{ course.url }}">Go to this course</a></li>
 	</ul>
 	{% endfor %}
+	{% endif %}
+	</div>
+	 <script>
+	// $( document ).ready(function() {
+ //    console.log( "ready!" );
+
+		$("#filters").on('click', function(evt) { 
+			evt.preventDefault(); 
+			console.log('hi');
+			var formInputs = {
+				price: $("#price-field").val(),
+				languages: $("#chinese").val()
+			};
+			console.log(formInputs);
+			$.get("/search/filters.json", formInputs, function (courses) {
+				console.log(courses);
+
+			});
+		});
+	// });
+	 </script>
 {% endblock %}

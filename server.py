@@ -1,13 +1,12 @@
-from flask import Flask, render_template, request, session
-
+from flask import Flask, render_template, request, session, jsonify
+import json
 import requests
-from model import connect_to_db, db, Course
+from model import connect_to_db, db, Course, SQLAlchemy
+# from SQLAlchemy import func
 
 app = Flask(__name__)
 
 app.secret_key = "SECRET"
-
-COURSERA_URL = "https://api.coursera.org/api/courses.v1"
 
 
 @app.route("/")
@@ -24,28 +23,31 @@ def show_search_results():
     phrase = request.args.get("search-phrase")
 
     try:
-        relevent_courses = db.session.query(Course).filter(Course.title.like('%' + phrase + '%')).all()
+        q = db.session.query(Course).filter(Course.title.like('%' + phrase + '%'))
+        relevent_courses = q.all()
+            # | (func.lower(Course.category.like('%' + phrase + '%'))) | (func.lower(Course.subcategory.like('%' + phrase + '%')))).all()
         session['search-phrase'] = phrase
-
     except UnicodeEncodeError:
         pass
 
     return render_template("search.html", courses=relevent_courses)
 
 
-@app.route("/search/filters")
+@app.route("/search/filters.json")
 def filter_results_by_price():
     """ Filter resuts based on user input parameters."""
 
-    q = db.session.query(Course)
+    q = db.session.query(Course.title, Course.description)
     phrase = session['search-phrase']
 
     price = request.args.get("price")
-    languages = request.args.get("languages")
-    # course_type = request.args.get("classtype")
-    # certificates = request.args.get("certificates")
-    
-    args = [Course.title.like('%' + phrase + '%')]
+    languages = request.args.getlist("languages")
+    type_course = request.args.get("coursetype")
+    certificates = request.args.get("certificates")
+    source = request.args.get("source")
+    university = request.args.getlist("university")
+
+    args = [((Course.title.like('%' + phrase + '%')) | (Course.category.like('%' + phrase + '%')) | (Course.subcategory.like('%' + phrase + '%')))]
 
     if price:
         price_arg = Course.price <= price
@@ -54,59 +56,62 @@ def filter_results_by_price():
         price_arg = None
 
     if languages:
-        language_arg = Course.languages.like('%' + languages + '%')
+        language_arg = Course.languages.in_(languages)
         args.append(language_arg)
     else:
         language_arg = None
 
-    # if course_type:
-    #     type_arg = Course.languages.like('%' + languages + '%')
-    # else:
-    #     language_arg = ""
+    if type_course == "self":
+        type_arg = ((Course.type_course.like('%ondemand%')) | (Course.type_course is None))
+        args.append(type_arg)
+    elif type_course == "instructor":
+        type_arg = Course.type_course.like('%session%')
+        print "type arg: ", type_arg
+        args.append(type_arg)
+    else:
+        type_arg = None
 
-    # if certificates:
-    #     certificate_arg = Course.has_certificates = True
-    # else:
-    #     language_arg = ""
+    if certificates == "yes":
+        certificate_arg = (Course.has_certificates == True)
+        args.append(certificate_arg)
+    else:
+        certificate_arg = None
+
+    if source == "coursera":
+        source_arg = (Course.source == "Coursera")
+        args.append(source_arg)
+    if source == "udemy":
+        source_arg = (Course.source == "Udemy")
+        args.append(source_arg)
+    else:
+        source_arg = None
+
+    if university:
+        university_arg = Course.partners.name.like('%' + university + '%')
+        args.append(university_arg)
+    else:
+        university_arg = None
+    
+    
     args = tuple(args)
-    print args
+    # print "args: ", args
 
     query = q.filter(*args)
-    print query
 
     try:
-        relevent_courses = query.all()
+        courses = query.all()
+        # print courses
     except UnicodeEncodeError:
         pass
 
-    return render_template("search.html", courses=relevent_courses)
+    return jsonify(courses)
+    # return render_template("search.html", courses=courses)
+    # return json.dumps([dict(course) for course in courses])
 
 
 # @app.route("/search/filters")
 # def filter_results_by_language():
 #     """ Filter resuts based on user input parameters."""
-
-
-
-
-# @app.route("/search-results")
-# def show_search_results():
-# 	"""Show search results based on user input parameters."""
-
-# 	search_phrase = request.args.get("search-phrase")
-# 	print search_phrase
-
-# 	payload = {"q": "search", "query": search_phrase}
-
-# 	response = requests.get(COURSERA_URL)
-
-# 	# r = requests.get("https://api.coursera.org/api/courses.v1")
-
-# 	rdict = response.json()
-
-# 	elements = rdict['elements']
-
-# 	return render_template("search_results.html", elements=elements)
 
 
 if __name__ == "__main__":
