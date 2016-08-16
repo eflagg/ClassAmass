@@ -37,7 +37,7 @@ def show_search_results():
 def filter_results_by_price():
     """ Filter resuts based on user input parameters."""
 
-    q = db.session.query(Course.course_id, Course.title, Course.description)
+    q = db.session.query(Course.course_id, Course.title, Course.description, Course.picture, Course.url, Course.workload, Course.price)
     phrase = session['search-phrase']
 
     price = request.args.get("price")
@@ -106,8 +106,8 @@ def filter_results_by_price():
 
 
     course_dict = {}
-    for course_id, title, description in courses:
-        course_dict[course_id] = {'title': title, 'description': description}
+    for course_id, title, description, picture, url, workload, price in courses:
+        course_dict[course_id] = {'title': title, 'description': description, 'picture': picture, 'price': price, 'url': url, 'workload': workload}
 
     
     print course_dict
