@@ -5,7 +5,8 @@
 	Sorry, we couldn't find any courses that matched your description! <a href="/">Try another search.</a>
 	{% else %}
 	Refine your search:
-	<form action='/search/filters/fake'>
+	<div id="form-div">
+	<form action='/search/filters/fake' id="filters-form">
 		Max Price: <input type="number" name="price" id="price-field"></input><br>
 		<label id="language-field">Language: 
 		<input type="checkbox" name="languages" value="en" >English</input>
@@ -36,6 +37,7 @@
 		<input type="checkbox" name="university" value="Yale">Yale University</input><br>
 		<input type="submit" id="filters" value="Apply Filters" ></input>
 	</form>
+	</div>
 	<div id="search-results">Here are your search results:
 	{% for course in courses %}
 	<ul>
@@ -55,24 +57,5 @@
 	{% endfor %}
 	{% endif %}
 	</div>
-	 <script>
-	// $( document ).ready(function() {
- //    console.log( "ready!" );
-
-		$("#filters").on('click', function(evt) { 
-			evt.preventDefault(); 
-			var formInputs = {
-				price: $("#price-field").val(),
-				// languages: $("#chinese").val(),
-			};
-			console.log(formInputs);
-			$.get("/search/filters.json", formInputs, function (course_dict) {
-				$("#search-results").empty();
-				for (var k in course_dict) {
-					$("#search-results").append("<ul><img src=" + course_dict[k]['picture'] + " height=\"75\" width=\"100\"><li>" + course_dict[k]['title'] + "</li><li>" + course_dict[k]['description'] + "</li><li>" + course_dict[k]['workload'] + "</li><li>" + course_dict[k]['price'] + "</li><li><a href=" + course_dict[k]['url'] + ">Go to this course</a></li></ul>");
-				};
-			});
-		});
-	// });
-	 </script>
+	<script src="/static/search-filters.js"></script>
 {% endblock %}
