@@ -23,7 +23,7 @@ def show_search_results():
     phrase = request.args.get("search-phrase")
 
     try:
-        q = db.session.query(Course).filter(Course.title.like('%' + phrase + '%'))
+        q = db.session.query(Course).filter((Course.title.ilike('%' + phrase + '%')) | (Course.category.ilike('%' + phrase + '%')) | (Course.subcategory.ilike('%' + phrase + '%')))
         relevent_courses = q.all()
             # | (func.lower(Course.category.like('%' + phrase + '%'))) | (func.lower(Course.subcategory.like('%' + phrase + '%')))).all()
         session['search-phrase'] = phrase
@@ -37,7 +37,7 @@ def show_search_results():
 def filter_results_by_price():
     """ Filter resuts based on user input parameters."""
 
-    q = db.session.query(Course.title, Course.description)
+    q = db.session.query(Course.course_id, Course.title, Course.description)
     phrase = session['search-phrase']
 
     price = request.args.get("price")
@@ -47,7 +47,7 @@ def filter_results_by_price():
     source = request.args.get("source")
     university = request.args.getlist("university")
 
-    args = [((Course.title.like('%' + phrase + '%')) | (Course.category.like('%' + phrase + '%')) | (Course.subcategory.like('%' + phrase + '%')))]
+    args = [((Course.title.ilike('%' + phrase + '%')) | (Course.category.ilike('%' + phrase + '%')) | (Course.subcategory.ilike('%' + phrase + '%')))]
 
     if price:
         price_arg = Course.price <= price
@@ -100,11 +100,20 @@ def filter_results_by_price():
 
     try:
         courses = query.all()
-        # print courses
+        print courses
     except UnicodeEncodeError:
         pass
 
-    return jsonify(courses)
+
+    course_dict = {}
+    for course_id, title, description in courses:
+        course_dict[course_id] = {'title': title, 'description': description}
+
+    
+    print course_dict
+
+
+    return jsonify(course_dict)
     # return render_template("search.html", courses=courses)
     # return json.dumps([dict(course) for course in courses])
 

@@ -36,21 +36,25 @@
 		<input type="checkbox" name="university" value="Yale">Yale University</input><br>
 		<input type="submit" id="filters" value="Apply Filters" ></input>
 	</form>
-	<div id="search-results">Here are your search results:
+	<div id="search-results">
+		<li id="course-title"></li>
+		<li id="course-info"></li>
+	</div>
+	<div>Here are your search results:
 	{% for course in courses %}
 	<ul>
-		<img src="{{ course.picture }}" height="75" width="100">
-		<li>{{ course.title }}</li>
-		<li>{{ course.description }}</li>
+		<img id="course-pic" src="{{ course.picture }}" height="75" width="100">
+		<li id="course-titleFAKE">{{ course.title }}</li>
+		<li id="course-infoFAKE">{{ course.description }}</li>
 		{% if course.workload %}
-		<li>{{ course.workload }}</li>
+		<li id="course-work">{{ course.workload }}</li>
 		{% endif %}
 		{% if course.price != 0 %}
-		<li>${{ course.price }}</li>
+		<li id="course-price">${{ course.price }}</li>
 		{% else %}
 		<li>Free</li>
 		{% endif %}
-		<li><a href="{{ course.url }}">Go to this course</a></li>
+		<li id="course-url"><a href="{{ course.url }}">Go to this course</a></li>
 	</ul>
 	{% endfor %}
 	{% endif %}
@@ -64,12 +68,18 @@
 			console.log('hi');
 			var formInputs = {
 				price: $("#price-field").val(),
-				languages: $("#chinese").val()
+				// languages: $("#chinese").val(),
 			};
 			console.log(formInputs);
-			$.get("/search/filters.json", formInputs, function (courses) {
-				console.log(courses);
-
+			$.get("/search/filters.json", formInputs, function (course_dict) {
+				console.log(course_dict);
+				for (var i=0; i < course_dict.length; i++) {
+					console.log(i);
+					console.log(i['title']);
+					console.log(i['description']);
+					$("#course-title").html(i['title']);
+					$("#course-info").html(i['description']);
+				};
 			});
 		});
 	// });
