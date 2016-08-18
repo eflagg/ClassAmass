@@ -9,8 +9,6 @@ COURSERA_PARTNERS_URL = "https://api.coursera.org/api/partners.v1"
 def load_coursera_partners():
     """Load partners from Coursera API responses into database"""
 
-    Partner.query.delete()
-
     partner_api_response = requests.get(COURSERA_PARTNERS_URL)
 
     partner_api_response = partner_api_response.json()
@@ -36,7 +34,7 @@ def load_coursera_courses():
     # Course.query.delete()
 
     i = 0
-    while i < 20:
+    while i < 21:
 		num = str(i * 100)
 
 		coursera_response = requests.get("https://api.coursera.org/api/courses.v1?start=" + num + "&fields=primaryLanguages,subtitleLanguages,certificates,description,startDate,workload,domainTypes,photoUrl,partnerIds")
@@ -47,8 +45,9 @@ def load_coursera_courses():
 
 		for element in elements:
 			title = element.get('name', '<unknown>')
-			type_course = element.get('courseType', '<unknown>')
 			description = element.get('description', '<unknown>')
+
+			course_type = element.get('courseType', '<unknown>')
 
 			slug = element.get('slug', '<unknown>')
 			url = "https://www.coursera.org/learn/" + slug
@@ -73,17 +72,26 @@ def load_coursera_courses():
 
 			picture = element.get('photoUrl', '<unknown>')
 
+			partner_ids = element.get('partnerIds', '<unknown>')
+
 			source = "Coursera"
 
-			course = Course(title=title, type_course=type_course, description=description, url=url,
+			course = Course(title=title, course_type=course_type, description=description, url=url,
 			languages=languages, subtitles=subtitles, workload=workload, 
 			has_certificates=has_certificates, category=category, subcategory=subcategory,
 			picture=picture, source=source)
 
+			for partner_id in partner_ids:
+				try:
+					partner = Partner.query.filter_by(partner_id=partner_id).one()
+					course.partners.append(partner)
+				except:
+					pass
+
 			db.session.add(course)
 
 		i = i + 1
-
+		
 		db.session.commit()
 
 

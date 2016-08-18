@@ -1,8 +1,5 @@
 from flask import Flask, render_template, request, session, jsonify
-import json
-import requests
-from model import connect_to_db, db, Course, SQLAlchemy
-# from SQLAlchemy import func
+from model import connect_to_db, db, Course, CoursePartner, Partner
 
 app = Flask(__name__)
 
@@ -25,27 +22,29 @@ def show_search_results():
     try:
         q = db.session.query(Course).filter((Course.title.ilike('%' + phrase + '%')) | (Course.category.ilike('%' + phrase + '%')) | (Course.subcategory.ilike('%' + phrase + '%')))
         relevent_courses = q.all()
-            # | (func.lower(Course.category.like('%' + phrase + '%'))) | (func.lower(Course.subcategory.like('%' + phrase + '%')))).all()
         session['search-phrase'] = phrase
     except UnicodeEncodeError:
         pass
 
-    return render_template("search.html", courses=relevent_courses)
+    return render_template("search.html", courses=relevent_courses, phrase=phrase)
 
 
 @app.route("/search/filters.json")
 def filter_results_by_price():
     """ Filter resuts based on user input parameters."""
 
-    q = db.session.query(Course.course_id, Course.title, Course.description, Course.picture, Course.url, Course.workload, Course.price)
-    phrase = session['search-phrase']
+    
+    # phrase = session['search-phrase']
 
     price = request.args.get("price")
     languages = request.args.getlist("languages")
-    type_course = request.args.get("coursetype")
+    course_type = request.args.get("coursetype")
     certificates = request.args.get("certificates")
     source = request.args.get("source")
     university = request.args.getlist("university")
+    phrase = request.args.get("search-phrase", session['search-phrase'])
+
+    q = db.session.query(Course.course_id, Course.title, Course.description, Course.picture, Course.url, Course.workload, Course.price)
 
     args = [((Course.title.ilike('%' + phrase + '%')) | (Course.category.ilike('%' + phrase + '%')) | (Course.subcategory.ilike('%' + phrase + '%')))]
 
@@ -61,12 +60,12 @@ def filter_results_by_price():
     else:
         language_arg = None
 
-    if type_course == "self":
-        type_arg = ((Course.type_course.like('%ondemand%')) | (Course.type_course is None))
+    if course_type == "self":
+        type_arg = ((Course.course_type.like('%ondemand%')) | (Course.course_type == None))
         args.append(type_arg)
-    elif type_course == "instructor":
-        type_arg = Course.type_course.like('%session%')
-        print "type arg: ", type_arg
+    elif course_type == "instructor":
+        type_arg = Course.course_type.like('%session%')
+        # print "type arg: ", type_arg
         args.append(type_arg)
     else:
         type_arg = None
@@ -87,11 +86,11 @@ def filter_results_by_price():
         source_arg = None
 
     if university:
-        university_arg = Course.partners.name.like('%' + university + '%')
-        args.append(university_arg)
+        q = db.session.query(Course.course_id, Course.title, Course.description, Course.picture, Course.url, Course.workload, Course.price).join(CoursePartner).join(Partner)
+        university_arg = Partner.name.in_(university)
+        args.insert(0, university_arg)
     else:
         university_arg = None
-    
     
     args = tuple(args)
     # print "args: ", args
@@ -100,17 +99,19 @@ def filter_results_by_price():
 
     try:
         courses = query.all()
-        print courses
+        # print courses
     except UnicodeEncodeError:
         pass
 
 
     course_dict = {}
     for course_id, title, description, picture, url, workload, price in courses:
+        # if url[-1] == "/":
+        #     url = url[:-1]
         course_dict[course_id] = {'title': title, 'description': description, 'picture': picture, 'price': price, 'url': url, 'workload': workload}
-
+        # print course_dict[course_id]['url']
     
-    print course_dict
+    # print course_dict
 
 
     return jsonify(course_dict)

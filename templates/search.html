@@ -7,6 +7,7 @@
 	Refine your search:
 	<div id="form-div">
 	<form action='/search/filters/fake' id="filters-form">
+		Search: <input type="text" name="search-phrase" value={{ phrase }}></input><br>
 		Max Price: <input type="number" name="price" id="price-field"></input><br>
 		<label id="language-field">Language: 
 		<input type="checkbox" name="languages" value="en" >English</input>
@@ -31,19 +32,19 @@
 		<input type="radio" name="certificates" value="no-pref">No Preference</input><br>
 		Source: <input type="checkbox" name="source" value="coursera" >Coursera</input>
 		<input type="checkbox" name="source" value="udemy">Udemy</input><br>
-		University: <input type="checkbox" name="university" value="Harvard">Harvard University</input>
-		<input type="checkbox" name="university" value="Stanford">Stanford University</input>
+		University: <input type="checkbox" name="university" value="Harvard University">Harvard University</input>
+		<input type="checkbox" name="university" value="Stanford University">Stanford University</input>
 		<input type="checkbox" name="university" value="MIT">MIT University</input>
-		<input type="checkbox" name="university" value="Yale">Yale University</input><br>
+		<input type="checkbox" name="university" value="Yale University">Yale University</input><br>
 		<input type="submit" id="filters" value="Apply Filters" ></input>
 	</form>
 	</div>
-	<div id="search-results">Here are your search results:
+	<div id="search-results"><p>Your search has yielded <b>{{ courses|length }}</b> results: </p>
 	{% for course in courses %}
-	<ul>
 		<img src="{{ course.picture }}" height="75" width="100">
-		<li>{{ course.title }}</li>
-		<li>{{ course.description }}</li>
+		<h3>{{ course.title }}</h3>
+		{{ course.description }}
+		<ul>
 		{% if course.workload %}
 		<li>{{ course.workload }}</li>
 		{% endif %}
@@ -52,8 +53,8 @@
 		{% else %}
 		<li>Free</li>
 		{% endif %}
-		<li><a href="{{ course.url }}">Go to this course</a></li>
-	</ul>
+		<li><a href="{{ course.url }}" target="_blank">Go to this course</a></li>
+	</ul><br>
 	{% endfor %}
 	{% endif %}
 	</div>

@@ -12,18 +12,15 @@ class Course(db.Model):
 	category = db.Column(db.String(1000))
 	subcategory = db.Column(db.String(1000))
 	price = db.Column(db.Integer, default=0)
-	type_course = db.Column(db.String)
+	course_type = db.Column(db.String, default="self")
 	source = db.Column(db.String, nullable=False)
-	description = db.Column(db.String(10000))
+	description = db.Column(db.Text)
 	languages = db.Column(db.String(100))
 	subtitles = db.Column(db.String(100))
 	workload = db.Column(db.String(200))
 	has_certificates = db.Column(db.Boolean, default=False)
 	url = db.Column(db.String(500))
 	picture = db.Column(db.String(500))
-	# dates = db.Column(db.DateTime)
-	# level = db.Column(db.String)
-	# is_paid = db.Column(db.Boolean, default=False)
 
 	def __repr__(self):
 		return "<Course id=%s, title=%s>" % (self.course_id, self.title)
@@ -55,6 +52,74 @@ class CoursePartner(db.Model):
 
 	def __repr__(self):
 		return "<partner_id=%s, course_id=%s>" % (self.partner_id, self.course_id)
+
+
+class User(db.Model):
+	"""Table for User models."""
+
+	__tablename__ = "users"
+
+	user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+	fname = db.Column(db.String(20), nullable=False)
+	lname = db.Column(db.String(20), nullable=False)
+	email = db.Column(db.String(30), nullable=False, unique=True)
+	password = db.Column(db.String(20), nullable=False)
+
+	def __repr__(self):
+		return "<User id=%s, fname=%s, lname=%s>" % (self.user_id, self.fname, self.lname)
+
+
+class Courses_Favorited(db.Model):
+	"""Table for Courses favotited by Users."""
+
+	__tablename__ = "courses_favorited"
+
+	id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+	user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+	course_id = db.Column(db.Integer, db.ForeignKey('courses.course_id'), nullable=False)
+
+	def __repr__(self):
+		return "<Favorite user_id=%s, course_id=%s>" % (self.user_id, self.course_id)
+
+
+class Courses_Taken(db.Model):
+	"""Table for Courses taken by Users."""
+
+	__tablename__ = "courses_taken"
+
+	id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+	user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+	course_id = db.Column(db.Integer, db.ForeignKey('courses.course_id'), nullable=False)
+
+	def __repr__(self):
+		return "<Taken user_id=%s, course_id=%s>" % (self.user_id, self.course_id)
+
+
+class Courses_Taking(db.Model):
+	"""Table for Courses currently being taken by Users."""
+
+	__tablename__ = "courses_taking"
+
+	id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+	user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+	course_id = db.Column(db.Integer, db.ForeignKey('courses.course_id'), nullable=False)
+
+	def __repr__(self):
+		return "<Taking user_id=%s, course_id=%s>" % (self.user_id, self.course_id)
+
+
+class Ratings(db.Model):
+	"""Table for Ratings of Courses made by Users."""
+
+	__tablename__ = "courses_ratings"
+
+	id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+	user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+	course_id = db.Column(db.Integer, db.ForeignKey('courses.course_id'), nullable=False)
+	rating = db.Column(db.Integer, nullable=False)
+
+	def __repr__(self):
+		return "<user_id=%s, course_id=%s, rating=%s>" % (self.user_id, self.course_id, self.rating)
 
 
 def init_app():
