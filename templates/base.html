@@ -2,9 +2,28 @@
 <html>
 <head>
 	<title>{% block title %}Emily's Online Courses{% endblock %}</title>
-	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+	<!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"> -->
 	<!-- <link rel="stylesheet" href="/static/css/styles.css"> -->
 	<script src="https://code.jquery.com/jquery.js"></script>
+	{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			{% for message in messages %}
+				{{ message }}
+			{% endfor %}
+		{% endif %}
+	{% endwith %}
+	<form action="/register">
+		<input type="submit" value="Sign Up">
+	</form>
+	<form action="/login">
+		<input type="submit" value="Log In">
+	</form>
+	<form action="/logout">
+		<input type="submit" value="Log Out">
+	</form>
+	<form action="/profile">
+		<input type="submit" value="My Profile">
+	</form>
 </head>
 <body>
 	{% block content %}CONTENT GOES HERE{% endblock %}

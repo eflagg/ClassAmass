@@ -1,9 +1,12 @@
-from flask import Flask, render_template, request, session, jsonify
-from model import connect_to_db, db, Course, CoursePartner, Partner
+from flask import Flask, render_template, request, session, jsonify, flash, redirect, url_for
+from model import connect_to_db, db, Course, CoursePartner, Partner, User, Courses_Favorited
+from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
 
 app.secret_key = "SECRET"
+
+app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 
 @app.route("/")
@@ -33,7 +36,6 @@ def show_search_results():
 def filter_results_by_price():
     """ Filter resuts based on user input parameters."""
 
-    
     # phrase = session['search-phrase']
 
     price = request.args.get("price")
@@ -65,7 +67,6 @@ def filter_results_by_price():
         args.append(type_arg)
     elif course_type == "instructor":
         type_arg = Course.course_type.like('%session%')
-        # print "type arg: ", type_arg
         args.append(type_arg)
     else:
         type_arg = None
@@ -93,45 +94,121 @@ def filter_results_by_price():
         university_arg = None
     
     args = tuple(args)
-    # print "args: ", args
 
     query = q.filter(*args)
 
     try:
         courses = query.all()
-        # print courses
     except UnicodeEncodeError:
         pass
 
-
     course_dict = {}
     for course_id, title, description, picture, url, workload, price in courses:
-        # if url[-1] == "/":
-        #     url = url[:-1]
         course_dict[course_id] = {'title': title, 'description': description, 'picture': picture, 'price': price, 'url': url, 'workload': workload}
-        # print course_dict[course_id]['url']
-    
-    # print course_dict
-
 
     return jsonify(course_dict)
-    # return render_template("search.html", courses=courses)
-    # return json.dumps([dict(course) for course in courses])
 
 
-# @app.route("/search/filters")
-# def filter_results_by_language():
-#     """ Filter resuts based on user input parameters."""
+@app.route("/register")
+def show_register_form():
+    """ Show register form to user."""
+
+    return render_template("register.html")
+
+
+@app.route("/register", methods=["POST"])
+def process_registeration():
+    """Process regisration form and create new user in database"""
+
+    fname = request.form.get("fname")
+    lname = request.form.get("lname")
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    user = User(fname=fname, lname=lname, email=email, password=password)
+    db.session.add(user)
+    db.session.commit()
+
+    session["current_user"] = user.email
+    flash("You have successfully created an account. Welcome!")
+
+    return render_template("user_profile.html", user=user)
+
+
+@app.route("/login")
+def show_login_form():
+    """ Show login form to user."""
+
+    return render_template("login.html")
+
+
+@app.route("/login", methods=["POST"])
+def process_login():
+    """Process login of user to check if in database and then add them to session if they are."""
+
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    user = User.query.filter_by(email=email).first()
+    if user != None:
+        if user.password == password:
+            session["current_user"] = user.email
+            courses = db.session.query(User.user_id,Course.title,Course.url,Course.picture).join(Courses_Favorited).join(Course).filter(User.user_id==user.user_id).all()
+            flash("You have successfully logged in.")
+            return redirect(url_for("show_user_page", user=user, courses=courses))
+        elif user.password != password:
+            flash("Incorrect password.")
+            return redirect("/login")
+    elif user == None:
+        flash("This email is not in our database.")
+        return redirect("/login")
+
+
+@app.route("/logout")
+def process_logout():
+    """Log user out of session."""
+
+    del session["current_user"]
+    flash("You have successfully logged out.")
+
+    return redirect("/")
+
+
+@app.route("/profile")
+def show_user_page():
+    """Show user profile page."""
+
+    email = session["current_user"]
+    user = User.query.filter_by(email=email).first()
+    courses = db.session.query(User.user_id,Course.title,Course.url,Course.picture).join(Courses_Favorited).join(Course).filter(User.user_id==user.user_id).all()
+
+    return render_template("user_profile.html", user=user, courses=courses)
+
+
+@app.route("/favorite", methods=["POST"])
+def favorite_course():
+    """Add favorited course of user to courses_favorited table."""
+
+    email = session.get("current_user")
+    if email: 
+        course_id = request.form.get("id")
+        user = User.query.filter_by(email=email).one()
+        favorite_course = Courses_Favorited(user_id=user.user_id, course_id=course_id)
+        db.session.add(favorite_course)
+        db.session.commit()
+        alert = "You have successfully added this course to your favorites list!"
+    if not email:
+        print "Hi"
+        alert = "You must be signed in to favorite a course!"
+        
+    return jsonify({'alert': alert})
 
 
 if __name__ == "__main__":
-    # We have to set debug=True here, since it has to be True at the
-    # point that we invoke the DebugToolbarExtension
     app.debug = True
 
     connect_to_db(app)
 
-    # Use the DebugToolbar
-    # DebugToolbarExtension(app)
+    DebugToolbarExtension(app)
 
     app.run(host="0.0.0.0")

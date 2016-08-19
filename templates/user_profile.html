@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}{{ user.fname }}'s Profile Page{% endblock %}
+{% block content %}
+	Hi {{ user.fname }}! Welcome to Emily's Online Courses!
+	<a href="/">Start searching for classes</a><br>
+	{% if courses %}
+		Your favorite classes are:<br>
+		{% for course in courses %}
+			<img src="{{ course.picture }}" height="75" width="100"></img></li>
+			<h3>{{ course.title }}</h3>
+			<a href="{{ course.url }}" target="_blank">Take this course</a><br>
+		{% endfor %}
+	{% endif %}
+{% endblock %}

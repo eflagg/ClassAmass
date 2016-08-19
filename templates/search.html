@@ -34,8 +34,11 @@
 		<input type="checkbox" name="source" value="udemy">Udemy</input><br>
 		University: <input type="checkbox" name="university" value="Harvard University">Harvard University</input>
 		<input type="checkbox" name="university" value="Stanford University">Stanford University</input>
-		<input type="checkbox" name="university" value="MIT">MIT University</input>
-		<input type="checkbox" name="university" value="Yale University">Yale University</input><br>
+		<input type="checkbox" name="university" value="The University of Edinburgh">The University of Edinburgh</input>
+		<input type="checkbox" name="university" value="Yale University">Yale University</input>
+		<input type="checkbox" name="university" value="University of Michigan">University of Michigan</input>
+		<input type="checkbox" name="university" value="Caltech">Caltech</input>
+		<input type="checkbox" name="university" value="Peking University">Peking University</input><br>
 		<input type="submit" id="filters" value="Apply Filters" ></input>
 	</form>
 	</div>
@@ -54,6 +57,7 @@
 		<li>Free</li>
 		{% endif %}
 		<li><a href="{{ course.url }}" target="_blank">Go to this course</a></li>
+		<button class ="favorite-button" type="button" id="{{ course.course_id }}">Favorite this course</button>
 	</ul><br>
 	{% endfor %}
 	{% endif %}

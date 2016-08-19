@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Login to Emily's Online Courses{% endblock %}
+{% block content %}
+	<div>
+	<form action="/login" method="POST">
+		<h3>Log in!</h3>
+		email address: <input type="text" name="email" required></input><br>
+		password: <input type="password" name="password" required></input><br>
+		<input type="submit" value="Log in">
+	</form>
+	</div>
+{% endblock %}
