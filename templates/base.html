@@ -12,18 +12,22 @@
 			{% endfor %}
 		{% endif %}
 	{% endwith %}
+	{% if not session['current_user'] %}
 	<form action="/register">
 		<input type="submit" value="Sign Up">
 	</form>
 	<form action="/login">
 		<input type="submit" value="Log In">
+	</form>	
+	{% endif %}
+	{% if session['current_user'] %}
+	<form action="/profile">
+		<input type="submit" value="My Profile">
 	</form>
 	<form action="/logout">
 		<input type="submit" value="Log Out">
 	</form>
-	<form action="/profile">
-		<input type="submit" value="My Profile">
-	</form>
+	{% endif %}
 </head>
 <body>
 	{% block content %}CONTENT GOES HERE{% endblock %}

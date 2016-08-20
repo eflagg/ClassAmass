@@ -1,10 +1,29 @@
+var favorite = function() {
+	// console.log("Ready");
+	$(".favorite-button").on("click", function(evt) {
+		// $(this).prop("disabled",true);
+		// console.log("Hello");
+		// evt.preventDefault();
+		// console.log("Hi");
+		// console.log(this.id);
+		// var random = [1, 2, 3];
+		// debugger;
+		$.post("/favorite", {'id': this.id}, function (data) {
+			alert(data.alert);
+		});
+	});
+	console.log("Another test");
+}
+
 $("#filters").on('click', function(evt) { 
+	console.log("Whats going on");
 	evt.preventDefault(); 
 	var formInputs = $("#filters-form").serialize();
 	$.get("/search/filters.json", formInputs, function (course_dict) {
 		$("#search-results").empty();
 		if ($.isEmptyObject(course_dict) == false) {
 			$("#search-results").append("<p>Your search has yielded <b>" + Object.keys(course_dict).length + "</b> results: </p>");
+			// favorite();
 			for (var k in course_dict) {
 				// $("#search-results").append("<ul>");
 				// var list = $('<ul>').appendTo('#search-results')
@@ -17,7 +36,7 @@ $("#filters").on('click', function(evt) {
 				} else {
 					$("#search-results").append("<li>Free</li><li><a href=" + course_dict[k]['url'] + " target =\"_blank\">Go to this course</a></li><button class =\"favorite-button\" type=\"button\" id=" + k + ">Favorite this course</button></ul><br><br>");
 				};
-			};
+			}; favorite();
 					
 		} else if ($.isEmptyObject(course_dict) == true) {
 			$("#search-results").append("<p>Sorry, we couldn't find any courses that matched your description! Please adjust your filters or <a href=\"/\">try another search.</a></p>");
@@ -25,17 +44,5 @@ $("#filters").on('click', function(evt) {
 	});
 });
 console.log("Test");
-$(document).ready(function() {
-	$(".favorite-button").on("click", function(evt) {
-		console.log("Hello");
-		evt.preventDefault();
-		console.log("Hi");
-		console.log(this.id);
-		var random = [1, 2, 3];
-		// debugger;
-		$.post("/favorite", {'id': this.id}, function (data) {
-			alert(data.alert);
-		});
-	});
-	console.log("Another test");
-});
+
+favorite();

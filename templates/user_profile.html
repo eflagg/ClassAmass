@@ -6,9 +6,13 @@
 	{% if courses %}
 		Your favorite classes are:<br>
 		{% for course in courses %}
-			<img src="{{ course.picture }}" height="75" width="100"></img></li>
-			<h3>{{ course.title }}</h3>
-			<a href="{{ course.url }}" target="_blank">Take this course</a><br>
-		{% endfor %}
+		<div id="course-{{ course.course_id }}">
+			<img src="{{ course.picture }}" height="50" width="75"></img></li>
+			<p>{{ course.title }}</p>
+			<a href="{{ course.url }}" target="_blank">Take this course</a>
+			<button type="button" class="unfavorite-button" id="{{ course.course_id }}">Unfavorite</button><br><br>
+		</div>
+		{% endfor %}		
 	{% endif %}
+	<script src="/static/unfavorite.js"></script>
 {% endblock %}

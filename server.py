@@ -178,11 +178,15 @@ def process_logout():
 def show_user_page():
     """Show user profile page."""
 
-    email = session["current_user"]
-    user = User.query.filter_by(email=email).first()
-    courses = db.session.query(User.user_id,Course.title,Course.url,Course.picture).join(Courses_Favorited).join(Course).filter(User.user_id==user.user_id).all()
+    email = session.get("current_user")
+    if email:
+        user = User.query.filter_by(email=email).first()
+        courses = db.session.query(User.user_id,Course.title,Course.url,Course.picture,Course.course_id).join(Courses_Favorited).join(Course).filter(User.user_id==user.user_id).all()
 
-    return render_template("user_profile.html", user=user, courses=courses)
+        return render_template("user_profile.html", user=user, courses=courses)
+    if not email:
+        flash("You must be logged in to see your profile page.")
+        return redirect("/")
 
 
 @app.route("/favorite", methods=["POST"])
@@ -193,15 +197,33 @@ def favorite_course():
     if email: 
         course_id = request.form.get("id")
         user = User.query.filter_by(email=email).one()
-        favorite_course = Courses_Favorited(user_id=user.user_id, course_id=course_id)
-        db.session.add(favorite_course)
-        db.session.commit()
-        alert = "You have successfully added this course to your favorites list!"
+        check_course = Courses_Favorited.query.filter_by(user_id=user.user_id, course_id=course_id).first()
+        if not check_course:
+            favorite_course = Courses_Favorited(user_id=user.user_id, course_id=course_id)
+            db.session.add(favorite_course)
+            db.session.commit()
+            alert = "You have successfully added this course to your favorites list!"
+        else:
+            alert = "You have already added this course to your favorites list!"
     if not email:
         print "Hi"
         alert = "You must be signed in to favorite a course!"
         
     return jsonify({'alert': alert})
+
+
+@app.route("/unfavorite", methods=["POST"])
+def unfavorite_course():
+    """Remove favorited course of user from courses_favorited table."""
+
+    course_id = request.form.get("id")
+    email = session.get("current_user")
+    user = User.query.filter_by(email=email).one()
+    course = Courses_Favorited.query.filter_by(user_id=user.user_id, course_id=course_id).first()
+    db.session.delete(course)
+    db.session.commit()
+
+    return jsonify()
 
 
 if __name__ == "__main__":
