@@ -13,7 +13,9 @@
 		<input type="checkbox" name="languages" value="en" >English</input>
 		<input type="checkbox" id="chinese" name="languages" value="zh-CN">Chinese (simplified)</input>
 		<input type="checkbox" name="languages" value="fr">French</input>
+		<input type="checkbox" name="languages" value="es">Spanish</input>
 		<input type="checkbox" name="languages" value="ja">Japonese</input>
+		<span id="extra-langs">
 		<input type="checkbox" name="languages" value="ko">Korean</input>
 		<input type="checkbox" name="languages" value="pt">Portuguese</input>
 		<input type="checkbox" name="languages" value="it">Italian</input>
@@ -24,8 +26,8 @@
 		<input type="checkbox" name="languages" value="de">German</input>
 		<input type="checkbox" name="languages" value="sv">Swedish</input>
 		<input type="checkbox" name="languages" value="he">Hebrew</input>
-		<input type="checkbox" name="languages" value="de">Dutch</input>
-		<input type="checkbox" name="languages" value="es">Spanish</input></label><br>
+		<input type="checkbox" name="languages" value="de">Dutch</input></span></label><br>
+		<button id="show-lang" type="button">Show More</button><br>
 		Instructor or Self led: <input type="radio" name="coursetype" value="self">Self Led</input>
 		<input type="radio" name="coursetype" value="instructor">Instructor Led</input><br>
 		Certificates: <input type="radio" name="certificates" value="yes">Has Certificates</input>
@@ -58,6 +60,7 @@
 		{% endif %}
 		<li><a href="{{ course.url }}" target="_blank">Go to this course</a></li>
 		<button class ="favorite-button" type="button" id="{{ course.course_id }}">Favorite this course</button>
+		<button class ="taken-button" type="button" id="{{ course.course_id }}">I've taken this course</button>
 	</ul><br>
 	{% endfor %}
 	{% endif %}

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session, jsonify, flash, redirect, url_for
-from model import connect_to_db, db, Course, CoursePartner, Partner, User, Courses_Favorited
+from model import connect_to_db, db, Course, CoursePartner, Partner, User, Courses_Favorited, Courses_Taken
 from flask_debugtoolbar import DebugToolbarExtension
+import hashlib
 
 app = Flask(__name__)
 
@@ -124,6 +125,7 @@ def process_registeration():
     lname = request.form.get("lname")
     email = request.form.get("email")
     password = request.form.get("password")
+    password = hashlib.sha224(password).hexdigest()[:20]
 
     user = User(fname=fname, lname=lname, email=email, password=password)
     db.session.add(user)
@@ -148,6 +150,7 @@ def process_login():
 
     email = request.form.get("email")
     password = request.form.get("password")
+    password = hashlib.sha224(password).hexdigest()[:20]
 
     user = User.query.filter_by(email=email).first()
     if user != None:
@@ -155,7 +158,7 @@ def process_login():
             session["current_user"] = user.email
             courses = db.session.query(User.user_id,Course.title,Course.url,Course.picture).join(Courses_Favorited).join(Course).filter(User.user_id==user.user_id).all()
             flash("You have successfully logged in.")
-            return redirect(url_for("show_user_page", user=user, courses=courses))
+            return redirect(url_for("show_user_page", user=user, courses=courses), code=307)
         elif user.password != password:
             flash("Incorrect password.")
             return redirect("/login")
@@ -181,9 +184,10 @@ def show_user_page():
     email = session.get("current_user")
     if email:
         user = User.query.filter_by(email=email).first()
-        courses = db.session.query(User.user_id,Course.title,Course.url,Course.picture,Course.course_id).join(Courses_Favorited).join(Course).filter(User.user_id==user.user_id).all()
+        fav_courses = db.session.query(User.user_id,Course.title,Course.url,Course.picture,Course.course_id).join(Courses_Favorited).join(Course).filter(User.user_id==user.user_id).all()
+        taken_courses = db.session.query(User.user_id,Course.title,Course.url,Course.picture,Course.course_id).join(Courses_Taken).join(Course).filter(User.user_id==user.user_id).all()
 
-        return render_template("user_profile.html", user=user, courses=courses)
+        return render_template("user_profile.html", user=user, fav_courses=fav_courses, taken_courses=taken_courses)
     if not email:
         flash("You must be logged in to see your profile page.")
         return redirect("/")
@@ -221,6 +225,45 @@ def unfavorite_course():
     user = User.query.filter_by(email=email).one()
     course = Courses_Favorited.query.filter_by(user_id=user.user_id, course_id=course_id).first()
     db.session.delete(course)
+    db.session.commit()
+
+    return jsonify()
+
+
+@app.route("/taken", methods=["POST"])
+def add_course_taken():
+    """Add course for user to courses_taken table."""
+
+    email = session.get("current_user")
+    if email: 
+        course_id = request.form.get("id")
+        user = User.query.filter_by(email=email).one()
+        check_course = Courses_Taken.query.filter_by(user_id=user.user_id, course_id=course_id).first()
+        if not check_course:
+            taken_course = Courses_Taken(user_id=user.user_id, course_id=course_id)
+            db.session.add(taken_course)
+            db.session.commit()
+            alert = "You have successfully added this course to your taken courses list!"
+        else:
+            alert = "You have already added this course to your taken courses list!"
+    if not email:
+        print "Hi"
+        alert = "You must be signed in to add a course to you taken courses list!"
+        
+    return jsonify({'alert': alert})
+
+
+@app.route("/move_to_taken", methods=["POST"])
+def move_course_from_fav_to_taken_list():
+    """Move favorited course of user from courses_favorited table to courses_taken table."""
+
+    course_id = request.form.get("id")
+    email = session.get("current_user")
+    user = User.query.filter_by(email=email).one()
+    fav_course = Courses_Favorited.query.filter_by(user_id=user.user_id, course_id=course_id).first()
+    db.session.delete(fav_course)
+    taken_course = Courses_Taken(user_id=user.user_id, course_id=course_id)
+    db.session.add(taken_course)
     db.session.commit()
 
     return jsonify()

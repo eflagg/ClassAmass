@@ -3,16 +3,30 @@
 {% block content %}
 	Hi {{ user.fname }}! Welcome to Emily's Online Courses!
 	<a href="/">Start searching for classes</a><br>
-	{% if courses %}
-		Your favorite classes are:<br>
-		{% for course in courses %}
+	{% if fav_courses %}
+		<h3>Your favorite classes are:</h3><br>
+		{% for course in fav_courses %}
 		<div id="course-{{ course.course_id }}">
 			<img src="{{ course.picture }}" height="50" width="75"></img></li>
 			<p>{{ course.title }}</p>
 			<a href="{{ course.url }}" target="_blank">Take this course</a>
-			<button type="button" class="unfavorite-button" id="{{ course.course_id }}">Unfavorite</button><br><br>
+			<button type="button" class="unfavorite-button" id="{{ course.course_id }}">Unfavorite</button>
+			<button type="button" class="taken-button" id="{{ course.course_id }}">Move to Taken Courses List</button><br><br>
 		</div>
 		{% endfor %}		
 	{% endif %}
+	<div id="taken">
+	{% if taken_courses %}
+		<h3>The classes you have taken are:</h3><br>
+		{% for course in taken_courses %}
+		<div id="course-{{ course.course_id }}">
+			<img src="{{ course.picture }}" height="50" width="75"></img></li>
+			<p>{{ course.title }}</p>
+			<a href="{{ course.url }}" target="_blank">View this course</a>
+			<button type="button" class="unfavorite-button" id="{{ course.course_id }}">Remove</button><br><br>
+		</div>
+		{% endfor %}		
+	{% endif %}
+	</div>
 	<script src="/static/unfavorite.js"></script>
 {% endblock %}

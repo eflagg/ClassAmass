@@ -1,3 +1,5 @@
+$("#extra-langs").hide()
+
 var favorite = function() {
 	// console.log("Ready");
 	$(".favorite-button").on("click", function(evt) {
@@ -13,6 +15,25 @@ var favorite = function() {
 		});
 	});
 	console.log("Another test");
+}
+
+var taken = function() {
+	$(".taken-button").on("click", function(evt) {
+		$.post("/taken", {'id': this.id}, function (data) {
+			alert(data.alert);
+		});
+	});
+}
+
+var lang_toggle = function() {
+	$("#show-lang").on("click", function() {
+		$("#extra-langs").toggle();
+		if ($("#show-lang").html().indexOf("Show more") === -1) { 
+			$("#show-lang").html("Show less");
+		} else {
+			$("#show-lang").html("Show more");
+		};
+	});
 }
 
 $("#filters").on('click', function(evt) { 
@@ -37,6 +58,8 @@ $("#filters").on('click', function(evt) {
 					$("#search-results").append("<li>Free</li><li><a href=" + course_dict[k]['url'] + " target =\"_blank\">Go to this course</a></li><button class =\"favorite-button\" type=\"button\" id=" + k + ">Favorite this course</button></ul><br><br>");
 				};
 			}; favorite();
+			taken();
+			lang_toggle();
 					
 		} else if ($.isEmptyObject(course_dict) == true) {
 			$("#search-results").append("<p>Sorry, we couldn't find any courses that matched your description! Please adjust your filters or <a href=\"/\">try another search.</a></p>");
@@ -46,3 +69,5 @@ $("#filters").on('click', function(evt) {
 console.log("Test");
 
 favorite();
+taken();
+lang_toggle();

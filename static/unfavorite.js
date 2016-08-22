@@ -1,18 +1,18 @@
 $(document).ready(function() {
 	console.log("Ready")
 	$(".unfavorite-button").on("click", function(evt) {
-		console.log(this);
-		// $(this).html("");
-		// console.log("Hello");
-		// evt.preventDefault();
-		// console.log("Hi");
-		console.log(this.id);
 		$("#course-" + this.id).empty();
-		// var random = [1, 2, 3];
-		// debugger;
 		$.post("/unfavorite", {'id': this.id}, function () {
 			alert("You have removed this class from your favorites list!");
 		});
 	});
-	// console.log("Another test");
+	$(".taken-button").on("click", function(evt) {
+		var course_info = $("#course-" + this.id).html();
+		console.log(course_info);
+		$("#course-" + this.id).empty();
+		$("#taken").append(course_info);
+		$.post("/move_to_taken", {'id': this.id}, function () {
+			alert("You have moved this class to your taken courses list!");
+		});
+	});
 });
