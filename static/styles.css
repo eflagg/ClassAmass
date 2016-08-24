@@ -1,0 +1,108 @@
+/*#home-button {
+	text-decoration: none;
+}
+*/
+.course-pic {
+	height: 75px;
+	width: 100px;
+}
+
+#search-results {
+	margin-left: 275px;
+	margin-top: 60px;
+	margin-right: 25px;
+	margin-bottom: 50px;
+}
+
+.navbar-fixed-top {
+	margin-bottom: 0;
+}
+
+.navbar-fixed-left {
+  margin-top: 20px;
+  padding: 10px; 
+  width: 200px;
+  position: fixed;
+  border-radius: 0;
+  height: 80%;
+  overflow-y: auto;
+  margin-left: 20px;
+}
+
+.navbar-fixed-left .navbar-nav > li {
+  float: none;  /* Cancel default li float: left */
+  width: 139px;
+}
+
+.navbar-fixed-left + .container {
+  padding-left: 160px;
+}
+
+/* On using dropdown menu (To right shift popuped) */
+.navbar-fixed-left .navbar-nav > li > .dropdown-menu {
+  margin-top: -50px;
+  margin-left: 140px;
+}
+
+#form-div {
+	color: white;
+	font-size: 12px;
+}
+
+#result-number {
+	text-align: center
+}
+
+#show-lang {
+	/*font-size: 10px;*/
+	padding: 2px; 
+	color: white;
+	margin-top: 0;
+}
+
+#show-uni {
+	/*font-size: 10px;*/
+	padding: 2px; 
+	color: black;
+	margin-top: 0;
+}
+
+/*.card {
+	border-style: solid;
+	border-width: 1px;
+	height: 300px;
+	width: 75%;
+}*/
+
+.img-fluid {
+	height: 75px;
+	width: 75px;
+}
+
+.media-object {
+	height: 75px;
+	width: 100px;
+}
+
+.media {
+	border-style: solid;
+	border-width: 1px;
+	/*height: 100px;*/
+	/*width: 90%; */
+}
+
+/*.bookmark {
+	text-align: right;
+}*/
+.homepage-div {
+	margin-top: 300px;
+	text-align: center;
+}
+
+#filters {
+	color: black;
+}
+
+.profile-div {
+	margin-top: 60px;
+}

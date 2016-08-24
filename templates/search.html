@@ -2,15 +2,84 @@
 {% block title %}Emily's Online Courses Search Results{% endblock %}
 {% block content %}
 	{% if courses == [] %}
+	<div class="container">
 	Sorry, we couldn't find any courses that matched your description! <a href="/">Try another search.</a>
+	</div>
 	{% else %}
+	<div class="navbar navbar-inverse navbar-fixed-left">
+  <ul class="nav nav-pills nav-stacked" data-spy="affix" data-offset-top="205">
+   <div id="form-div">
+	<form action='/search/filters/fake' id="filters-form">
+		<li>Search: <input type="text" name="search-phrase" value={{ phrase }}></input></li>
+		<li class="divider"></li><br>
+		<li>Max Price: <input type="number" name="price" id="price-field"></input></li>
+		<li class="divider"></li><br>
+		<li>Language:<br>
+		<span id="extra-langs">
+		<input id="en" type="checkbox" name="languages" value="en" >English</input><br>
+		<input type="checkbox" id="chinese" name="languages" value="zh-CN">Chinese (simplified)</input><br>
+		<input type="checkbox" name="languages" value="fr">French</input><br>
+		<input type="checkbox" name="languages" value="es">Spanish</input><br>
+		<input type="checkbox" name="languages" value="ja">Japonese</input><br>
+
+		<input type="checkbox" name="languages" value="ko">Korean</input><br>
+		<input type="checkbox" name="languages" value="pt">Portuguese</input><br>
+		<input type="checkbox" name="languages" value="it">Italian</input><br>
+		<input type="checkbox" name="languages" value="tr">Turkish</input><br>
+		<input type="checkbox" name="languages" value="ru">Russian</input><br>
+		<input type="checkbox" name="languages" value="zh-TW">Chinese (traditional)</input><br>
+		<input type="checkbox" name="languages" value="ar">Arabic</input><br>
+		<input type="checkbox" name="languages" value="de">German</input><br>
+		<input type="checkbox" name="languages" value="sv">Swedish</input><br>
+		<input type="checkbox" name="languages" value="he">Hebrew</input><br>
+		<input type="checkbox" name="languages" value="de">Dutch</input></span><br>
+		<a id="show-lang">Show More</a></li>
+		<li class="divider"></li><br>
+		<li>Instructor or Self led:<br>
+		<input type="radio" name="coursetype" value="self">Self Led</input>
+		<input type="radio" name="coursetype" value="instructor">Instructor Led</input></li>
+		<li class="divider"></li><br>
+		<li>Certificates:<br>
+		<input type="radio" name="certificates" value="yes">Has Certificates</input>
+		<input type="radio" name="certificates" value="no-pref">No Preference</input></li>
+		<li class="divider"></li><br>
+		<li>Source:<br>
+		<input type="checkbox" name="source" value="Coursera" >Coursera</input>
+		<input type="checkbox" name="source" value="Udemy">Udemy</input></li>
+		<li class="divider"></li><br>
+		<li>University:<br>
+		<span id="extra-unis">
+		<input type="checkbox" name="university" value="Harvard University">Harvard University</input><br>
+		<input type="checkbox" name="university" value="1">Stanford University</input><br>
+		<input type="checkbox" name="university" value="14">The University of Edinburgh</input><br>
+		<input type="checkbox" name="university" value="109">Yale University</input><br>
+		<input type="checkbox" name="university" value="3">University of Michigan</input><br>
+		
+		<input type="checkbox" name="university" value="12">Caltech</input><br>
+		<input type="checkbox" name="university" value="45">The Chinese University of Hong Kong</input><br>
+		<input type="checkbox" name="university" value="34">Wesleyan University</input><br>
+		<input type="checkbox" name="university" value="120">University of New Mexico</input><br>
+		<input type="checkbox" name="university" value="93">University of Zurich</input><br>
+		<input type="checkbox" name="university" value="182">Koc University</input><br>
+		<input type="checkbox" name="university" value="147">Unviersity of Manchester</input><br>
+		<input type="checkbox" name="university" value="223">ESSEC Business School</input><br>
+		<input type="checkbox" name="university" value="66">Ecole Polytechnique</input><br>
+		<input type="checkbox" name="university" value="51">The Pennsylvania State University</input><br>
+		<input type="checkbox" name="university" value="163">Peking University</input></span></li><br>
+		<button id="show-uni" type="button" class="btn btn-primary btn-xs">Show More</button><br>
+		<li class="divider"></li><br>
+		<input type="submit" id="filters" value="Apply Filters" ></input>
+	</form>
+	</div>
+	</div>
+	<!-- <div class="container">
 	Refine your search:
 	<div id="form-div">
 	<form action='/search/filters/fake' id="filters-form">
 		Search: <input type="text" name="search-phrase" value={{ phrase }}></input><br>
 		Max Price: <input type="number" name="price" id="price-field"></input><br>
-		<label id="language-field">Language: 
-		<input type="checkbox" name="languages" value="en" >English</input>
+		Language: 
+		<input id="en" type="checkbox" name="languages" value="en" >English</input>
 		<input type="checkbox" id="chinese" name="languages" value="zh-CN">Chinese (simplified)</input>
 		<input type="checkbox" name="languages" value="fr">French</input>
 		<input type="checkbox" name="languages" value="es">Spanish</input>
@@ -26,27 +95,82 @@
 		<input type="checkbox" name="languages" value="de">German</input>
 		<input type="checkbox" name="languages" value="sv">Swedish</input>
 		<input type="checkbox" name="languages" value="he">Hebrew</input>
-		<input type="checkbox" name="languages" value="de">Dutch</input></span></label><br>
+		<input type="checkbox" name="languages" value="de">Dutch</input></span><br>
 		<button id="show-lang" type="button">Show More</button><br>
 		Instructor or Self led: <input type="radio" name="coursetype" value="self">Self Led</input>
 		<input type="radio" name="coursetype" value="instructor">Instructor Led</input><br>
 		Certificates: <input type="radio" name="certificates" value="yes">Has Certificates</input>
 		<input type="radio" name="certificates" value="no-pref">No Preference</input><br>
-		Source: <input type="checkbox" name="source" value="coursera" >Coursera</input>
-		<input type="checkbox" name="source" value="udemy">Udemy</input><br>
+		Source: <input type="checkbox" name="source" value="Coursera" >Coursera</input>
+		<input type="checkbox" name="source" value="Udemy">Udemy</input><br>
 		University: <input type="checkbox" name="university" value="Harvard University">Harvard University</input>
-		<input type="checkbox" name="university" value="Stanford University">Stanford University</input>
-		<input type="checkbox" name="university" value="The University of Edinburgh">The University of Edinburgh</input>
-		<input type="checkbox" name="university" value="Yale University">Yale University</input>
-		<input type="checkbox" name="university" value="University of Michigan">University of Michigan</input>
-		<input type="checkbox" name="university" value="Caltech">Caltech</input>
-		<input type="checkbox" name="university" value="Peking University">Peking University</input><br>
+		<input type="checkbox" name="university" value="1">Stanford University</input>
+		<input type="checkbox" name="university" value="14">The University of Edinburgh</input>
+		<input type="checkbox" name="university" value="109">Yale University</input>
+		<input type="checkbox" name="university" value="3">University of Michigan</input>
+		<span id="extra-unis">
+		<input type="checkbox" name="university" value="12">Caltech</input>
+		<input type="checkbox" name="university" value="45">The Chinese University of Hong Kong</input>
+		<input type="checkbox" name="university" value="34">Wesleyan University</input>
+		<input type="checkbox" name="university" value="120">University of New Mexico</input>
+		<input type="checkbox" name="university" value="93">University of Zurich</input>
+		<input type="checkbox" name="university" value="182">Koc University</input>
+		<input type="checkbox" name="university" value="147">Unviersity of Manchester</input>
+		<input type="checkbox" name="university" value="223">ESSEC Business School</input>
+		<input type="checkbox" name="university" value="66">Ecole Polytechnique</input>
+		<input type="checkbox" name="university" value="51">The Pennsylvania State University</input>
+		<input type="checkbox" name="university" value="163">Peking University</input></span><br>
+		<button id="show-uni" type="button">Show More</button><br><br>
 		<input type="submit" id="filters" value="Apply Filters" ></input>
 	</form>
 	</div>
-	<div id="search-results"><p>Your search has yielded <b>{{ courses|length }}</b> results: </p>
+	</div> -->
+	<div id="search-results"><h3 id="result-number">Your search for <strong>{{ phrase }}</strong> has yielded <strong>{{ courses|length }}</strong> results: </h3>
 	{% for course in courses %}
-		<img src="{{ course.picture }}" height="75" width="100">
+	<div class="media well">
+  	<div class="media-left media-middle">
+    <a href="{{ course.url }}">
+      <img class="media-object" src="{{ course.picture }}" alt="course pic">
+    </a>
+  </div>
+  <div class="media-body">
+    <h4 class="media-heading">{{ course.title }}</h4>
+    <p>{{ course.description[:350] }}</p>
+     <p>{% if course.workload %}
+     	Workload: {{ course.workload }}<br>
+     	{% endif %}
+     	Price: 
+     	{% if course.price != 0 %}
+     	${{ course.price }}
+     	{% else%}
+     	Free
+     	{% endif %}</p>
+     <button class="btn btn-danger favorite-button btn-xs">Favorite</button>
+	 <button class="btn btn-success taken-button btn-xs">Taken</button>
+  </div>
+</div>
+	<!-- <div class="card">
+	</div>
+ 
+    <img class="card-img-left" src="{{ course.picture }}" width="100px;" alt="Bandra Worli Sea Link">
+  <div class="card-block">
+    <span><h4 class="card-title">{{ course.title }}</h4></span>
+    <p class="card-text">A Sea Link Connecting two suburbs of the City of Mumbai, India.</p>
+  </div>
+
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">Marine Lines</li>
+    <li class="list-group-item">Gateway of India</li>
+    <li class="list-group-item">National Park</li>
+  </ul>
+  <div class="card-block">
+      <a href="#" class="btn btn-danger">Go Back</a>
+	  <a href="#" class="btn btn-success">Visit Mumbai</a>
+  </div>
+
+
+</div> -->
+		<!-- <img src="{{ course.picture }}" class="course-pic">
 		<h3>{{ course.title }}</h3>
 		{{ course.description }}
 		<ul>
@@ -61,7 +185,7 @@
 		<li><a href="{{ course.url }}" target="_blank">Go to this course</a></li>
 		<button class ="favorite-button" type="button" id="{{ course.course_id }}">Favorite this course</button>
 		<button class ="taken-button" type="button" id="{{ course.course_id }}">I've taken this course</button>
-	</ul><br>
+	</ul><br> -->
 	{% endfor %}
 	{% endif %}
 	</div>

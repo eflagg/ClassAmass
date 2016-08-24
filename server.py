@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, session, jsonify, flash, redi
 from model import connect_to_db, db, Course, CoursePartner, Partner, User, Courses_Favorited, Courses_Taken
 from flask_debugtoolbar import DebugToolbarExtension
 import hashlib
+from sqlalchemy import func
 
 app = Flask(__name__)
 
@@ -21,20 +22,23 @@ def index_page():
 def show_search_results():
     """Show search results based on user input parameters."""
 
-    phrase = request.args.get("search-phrase")
+    phrase = request.args.get("search")
 
     try:
         q = db.session.query(Course).filter((Course.title.ilike('%' + phrase + '%')) | (Course.category.ilike('%' + phrase + '%')) | (Course.subcategory.ilike('%' + phrase + '%')))
         relevent_courses = q.all()
+        lang_query = db.session.query(Course.languages, func.count(Course.languages)).filter((Course.title.ilike('%' + phrase + '%')) | (Course.category.ilike('%' + phrase + '%')) | (Course.subcategory.ilike('%' + phrase + '%'))).group_by(Course.languages)
+        lang_stats = lang_query.all()
+        print lang_stats
         session['search-phrase'] = phrase
     except UnicodeEncodeError:
         pass
 
-    return render_template("search.html", courses=relevent_courses, phrase=phrase)
+    return render_template("search.html", courses=relevent_courses, phrase=phrase, lang_stats=lang_stats)
 
 
 @app.route("/search/filters.json")
-def filter_results_by_price():
+def filter_results():
     """ Filter resuts based on user input parameters."""
 
     # phrase = session['search-phrase']
@@ -78,10 +82,10 @@ def filter_results_by_price():
     else:
         certificate_arg = None
 
-    if source == "coursera":
+    if source == "Coursera":
         source_arg = (Course.source == "Coursera")
         args.append(source_arg)
-    if source == "udemy":
+    if source == "Udemy":
         source_arg = (Course.source == "Udemy")
         args.append(source_arg)
     else:
@@ -89,7 +93,7 @@ def filter_results_by_price():
 
     if university:
         q = db.session.query(Course.course_id, Course.title, Course.description, Course.picture, Course.url, Course.workload, Course.price).join(CoursePartner).join(Partner)
-        university_arg = Partner.name.in_(university)
+        university_arg = Partner.partner_id.in_(university)
         args.insert(0, university_arg)
     else:
         university_arg = None
@@ -97,15 +101,25 @@ def filter_results_by_price():
     args = tuple(args)
 
     query = q.filter(*args)
+    lang_query = db.session.query(Course.languages, func.count(Course.languages)).filter(*args).group_by(Course.languages)
+    # print "lq ", lang_query
 
     try:
         courses = query.all()
+        lang_stats = lang_query.all()
+        # print "ls ", lang_stats
     except UnicodeEncodeError:
         pass
 
+    # phrase_dict = {}
+    # phrase_dict['search'] = phrase
     course_dict = {}
     for course_id, title, description, picture, url, workload, price in courses:
         course_dict[course_id] = {'title': title, 'description': description, 'picture': picture, 'price': price, 'url': url, 'workload': workload}
+    lang_dict = {}
+    for lang, count in lang_stats:
+        lang_dict[lang] = count
+    print "ld: ", lang_dict
 
     return jsonify(course_dict)
 
@@ -156,9 +170,8 @@ def process_login():
     if user != None:
         if user.password == password:
             session["current_user"] = user.email
-            courses = db.session.query(User.user_id,Course.title,Course.url,Course.picture).join(Courses_Favorited).join(Course).filter(User.user_id==user.user_id).all()
             flash("You have successfully logged in.")
-            return redirect(url_for("show_user_page", user=user, courses=courses), code=307)
+            return redirect("/profile")
         elif user.password != password:
             flash("Incorrect password.")
             return redirect("/login")

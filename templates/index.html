@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 {% block title %}Emily's Online Courses{% endblock %}
 {% block content %}
+	<div class="homepage-div">
 	<h1>What do you want to learn about?</h1>
 	<form action='/search'>
-		<input type="text" name="search-phrase"></input>
+		<input type="text" name="search"></input>
 		<input type="submit" value="Find a class!"></input>
 	</form>
+	</div>
 {% endblock %}

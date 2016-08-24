@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}{{ user.fname }}'s Profile Page{% endblock %}
 {% block content %}
+	<div class="profile-div">
 	Hi {{ user.fname }}! Welcome to Emily's Online Courses!
 	<a href="/">Start searching for classes</a><br>
 	{% if fav_courses %}
@@ -27,6 +28,7 @@
 		</div>
 		{% endfor %}		
 	{% endif %}
+	</div>
 	</div>
 	<script src="/static/unfavorite.js"></script>
 {% endblock %}

@@ -1,20 +1,12 @@
 $("#extra-langs").hide()
+$("#extra-unis").hide()
 
 var favorite = function() {
-	// console.log("Ready");
 	$(".favorite-button").on("click", function(evt) {
-		// $(this).prop("disabled",true);
-		// console.log("Hello");
-		// evt.preventDefault();
-		// console.log("Hi");
-		// console.log(this.id);
-		// var random = [1, 2, 3];
-		// debugger;
 		$.post("/favorite", {'id': this.id}, function (data) {
 			alert(data.alert);
 		});
 	});
-	console.log("Another test");
 }
 
 var taken = function() {
@@ -28,26 +20,33 @@ var taken = function() {
 var lang_toggle = function() {
 	$("#show-lang").on("click", function() {
 		$("#extra-langs").toggle();
-		if ($("#show-lang").html().indexOf("Show more") === -1) { 
-			$("#show-lang").html("Show less");
+		if ($("#show-lang").html() !== "Show More") { 
+			$("#show-lang").html("Show More");
 		} else {
-			$("#show-lang").html("Show more");
+			$("#show-lang").html("Show Less");
+		};
+	});
+}
+
+var uni_toggle = function() {
+	$("#show-uni").on("click", function() {
+		$("#extra-unis").toggle();
+		if ($("#show-uni").html() !== "Show More") { 
+			$("#show-uni").html("Show More");
+		} else {
+			$("#show-uni").html("Show Less");
 		};
 	});
 }
 
 $("#filters").on('click', function(evt) { 
-	console.log("Whats going on");
 	evt.preventDefault(); 
 	var formInputs = $("#filters-form").serialize();
-	$.get("/search/filters.json", formInputs, function (course_dict) {
+	$.get("/search/filters.json", formInputs, function (course_dict, phrase_dict) {
 		$("#search-results").empty();
 		if ($.isEmptyObject(course_dict) == false) {
-			$("#search-results").append("<p>Your search has yielded <b>" + Object.keys(course_dict).length + "</b> results: </p>");
-			// favorite();
+			$("#search-results").append("<h3 id=\"result-number\">Your search for <strong>" + "PUT IN LATER" + "</strong> has yielded <b>" + Object.keys(course_dict).length + "</b> results: </h3>");
 			for (var k in course_dict) {
-				// $("#search-results").append("<ul>");
-				// var list = $('<ul>').appendTo('#search-results')
 				$("#search-results").append("<img src=" + course_dict[k]['picture'] + " height=\"75\" width=\"100\"><h3>" + course_dict[k]['title'] + "</h3>" + course_dict[k]['description']);
 				if (course_dict[k]['workload']) {
 					$("#search-results").append("<ul><li>" + course_dict[k]['workload'] + "</li>");
@@ -57,17 +56,18 @@ $("#filters").on('click', function(evt) {
 				} else {
 					$("#search-results").append("<li>Free</li><li><a href=" + course_dict[k]['url'] + " target =\"_blank\">Go to this course</a></li><button class =\"favorite-button\" type=\"button\" id=" + k + ">Favorite this course</button></ul><br><br>");
 				};
-			}; favorite();
+			}; 
+			favorite();
 			taken();
 			lang_toggle();
-					
+			uni_toggle();	
 		} else if ($.isEmptyObject(course_dict) == true) {
 			$("#search-results").append("<p>Sorry, we couldn't find any courses that matched your description! Please adjust your filters or <a href=\"/\">try another search.</a></p>");
 		};
 	});
 });
-console.log("Test");
 
 favorite();
 taken();
 lang_toggle();
+uni_toggle();
