@@ -2,33 +2,49 @@
 {% block title %}{{ user.fname }}'s Profile Page{% endblock %}
 {% block content %}
 	<div class="profile-div">
-	Hi {{ user.fname }}! Welcome to Emily's Online Courses!
-	<a href="/">Start searching for classes</a><br>
-	{% if fav_courses %}
-		<h3>Your favorite classes are:</h3><br>
+		<h3 class="welcome-note">Hi {{ user.fname }}! Welcome to Emily's Online Courses!
+			<a href="/">Start searching for classes</a>
+		</h3>
+	{% if fav_courses %}		
+		<h3 class="class-heading">Classes you'd like to take:</h3><br>
 		{% for course in fav_courses %}
-		<div id="course-{{ course.course_id }}">
-			<img src="{{ course.picture }}" height="50" width="75"></img></li>
-			<p>{{ course.title }}</p>
-			<a href="{{ course.url }}" target="_blank">Take this course</a>
-			<button type="button" class="unfavorite-button" id="{{ course.course_id }}">Unfavorite</button>
-			<button type="button" class="taken-button" id="{{ course.course_id }}">Move to Taken Courses List</button><br><br>
+		<div id="{{ course.course_id }}" class="course-div">
+			<div id ="course-{{ course.course_id }}" class="media well profile">
+				<div class="media-left media-middle">
+					<a href="{{ course.url }}">
+      					<img class="media-object" src="{{ course.picture }}" alt="course pic">
+    				</a>
+  				</div>
+  				<div id="add-here-{{ course.course_id }}" class="media-body">
+    				<h4 class="media-heading">{{ course.title }}</h4>
+					<button type="button" class="btn btn-success btn-xs taken-button" data-course-id="{{ course.course_id }}">Completed</button>
+					<button type="button" class="btn btn-danger btn-xs unfavorite-button" data-course-id="{{ course.course_id }}">Unfavorite</button>
+				</div>
+			</div>
 		</div>
 		{% endfor %}		
 	{% endif %}
-	<div id="taken">
+
 	{% if taken_courses %}
-		<h3>The classes you have taken are:</h3><br>
-		{% for course in taken_courses %}
-		<div id="course-{{ course.course_id }}">
-			<img src="{{ course.picture }}" height="50" width="75"></img></li>
-			<p>{{ course.title }}</p>
-			<a href="{{ course.url }}" target="_blank">View this course</a>
-			<button type="button" class="unfavorite-button" id="{{ course.course_id }}">Remove</button><br><br>
-		</div>
-		{% endfor %}		
+		<div id="taken">
+			<h3 class="class-heading">Classes you have taken:</h3><br>
+			{% for course in taken_courses %}
+			<div id="{{ course.course_id }}">
+				<div id ="coursediv-{{ course.course_id }}" class="media well profile">
+					<div class="media-left media-middle">
+						<a href="{{ course.url }}">
+	      					<img class="media-object" src="{{ course.picture }}" alt="course pic">
+	    				</a>
+	  				</div>
+	  				<div class="media-body">
+	    				<h4 class="media-heading">{{ course.title }}</h4>
+						<button type="button" class="btn btn-danger btn-xs remove-course" data-course-id="{{ course.course_id }}">Remove</button>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+		</div>		
 	{% endif %}
-	</div>
 	</div>
 	<script src="/static/unfavorite.js"></script>
 {% endblock %}

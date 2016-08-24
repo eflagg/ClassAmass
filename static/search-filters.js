@@ -43,18 +43,18 @@ $("#filters").on('click', function(evt) {
 	evt.preventDefault(); 
 	var formInputs = $("#filters-form").serialize();
 	$.get("/search/filters.json", formInputs, function (course_dict, phrase_dict) {
-		$("#search-results").empty();
+		$("#main-search-div").empty();
 		if ($.isEmptyObject(course_dict) == false) {
-			$("#search-results").append("<h3 id=\"result-number\">Your search for <strong>" + "PUT IN LATER" + "</strong> has yielded <b>" + Object.keys(course_dict).length + "</b> results: </h3>");
+			$("#main-search-div").append("<div id=\"search-results\"><h3 id=\"result-number\">Your search for <strong>" + "PUT IN LATER" + "</strong> has yielded <b>" + Object.keys(course_dict).length + "</b> results: </h3>");
 			for (var k in course_dict) {
-				$("#search-results").append("<img src=" + course_dict[k]['picture'] + " height=\"75\" width=\"100\"><h3>" + course_dict[k]['title'] + "</h3>" + course_dict[k]['description']);
-				if (course_dict[k]['workload']) {
-					$("#search-results").append("<ul><li>" + course_dict[k]['workload'] + "</li>");
-				};
-				if (course_dict[k]['price'] !== 0) {
-					$("#search-results").append("<li>$" + course_dict[k]['price'] + "</li><li><a href=" + course_dict[k]['url'] + ">Go to this course</a></li><button class =\"favorite-button\" type=\"button\" id=" + k + ">Favorite this course</button></ul><br><br>");
-				} else {
-					$("#search-results").append("<li>Free</li><li><a href=" + course_dict[k]['url'] + " target =\"_blank\">Go to this course</a></li><button class =\"favorite-button\" type=\"button\" id=" + k + ">Favorite this course</button></ul><br><br>");
+				if (course_dict[k]['workload'] && (course_dict[k]['price'] !== 0)) {
+					$("#main-search-div").append("<div class=\"media well\"><div class=\"media-left media-middle\"><a href=" + course_dict[k]['url'] + " target =\"_blank\"><img class=\"media-object\" src=" + course_dict[k]['picture'] + " alt=\"course pic\"></a></div><div class=\"media-body\"><h4 class=\"media-heading\">" + course_dict[k]['title'] + "</h4><p>" + course_dict[k]['description'].slice(0,350) + "</p><p>Workload: " + course_dict[k]['workload'] + "<br>Price: $" + course_dict[k]['price'] + "</p><button class =\"btn btn-danger favorite-button btn-xs\" type=\"button\" id=" + k + ">Favorite</button><button class=\"btn btn-success taken-button btn-xs\" id=" + k + ">Taken</button></div></div></div>");
+				} else if (course_dict[k]['workload'] && (course_dict[k]['price'] === 0)) {
+					$("#main-search-div").append("<div class=\"media well\"><div class=\"media-left media-middle\"><a href=" + course_dict[k]['url'] + " target =\"_blank\"><img class=\"media-object\" src=" + course_dict[k]['picture'] + " alt=\"course pic\"></a></div><div class=\"media-body\"><h4 class=\"media-heading\">" + course_dict[k]['title'] + "</h4><p>" + course_dict[k]['description'].slice(0,350) + "</p><p>Workload: " + course_dict[k]['workload'] + "<br>Price: Free</p><button class =\"btn btn-danger favorite-button btn-xs\" type=\"button\" id=" + k + ">Favorite</button><button class=\"btn btn-success taken-button btn-xs\" id=" + k + ">Taken</button></div></div></div>");
+				} else if (!(course_dict[k]['workload']) && (course_dict[k]['price'] !== 0)) {
+					$("#main-search-div").append("<div class=\"media well\"><div class=\"media-left media-middle\"><a href=" + course_dict[k]['url'] + " target =\"_blank\"><img class=\"media-object\" src=" + course_dict[k]['picture'] + " alt=\"course pic\"></a></div><div class=\"media-body\"><h4 class=\"media-heading\">" + course_dict[k]['title'] + "</h4><p>" + course_dict[k]['description'].slice(0,350) + "</p><p>Price: $" + course_dict[k]['price'] + "</p><button class =\"btn btn-danger favorite-button btn-xs\" type=\"button\" id=" + k + ">Favorite</button><button class=\"btn btn-success taken-button btn-xs\" id=" + k + ">Taken</button></div></div></div>");
+				} else if (!(course_dict[k]['workload']) && (course_dict[k]['price'] === 0)) {
+					$("#main-search-div").append("<div class=\"media well\"><div class=\"media-left media-middle\"><a href=" + course_dict[k]['url'] + " target =\"_blank\"><img class=\"media-object\" src=" + course_dict[k]['picture'] + " alt=\"course pic\"></a></div><div class=\"media-body\"><h4 class=\"media-heading\">" + course_dict[k]['title'] + "</h4><p>" + course_dict[k]['description'].slice(0,350) + "</p><p>Price: Free</p><button class =\"btn btn-danger favorite-button btn-xs\" type=\"button\" id=" + k + ">Favorite</button><button class=\"btn btn-success taken-button btn-xs\" id=" + k + ">Taken</button></div></div></div>");
 				};
 			}; 
 			favorite();
@@ -62,7 +62,7 @@ $("#filters").on('click', function(evt) {
 			lang_toggle();
 			uni_toggle();	
 		} else if ($.isEmptyObject(course_dict) == true) {
-			$("#search-results").append("<p>Sorry, we couldn't find any courses that matched your description! Please adjust your filters or <a href=\"/\">try another search.</a></p>");
+			$("#main-search-div").append("<p>Sorry, we couldn't find any courses that matched your description! Please adjust your filters or <a href=\"/\">try another search.</a></p>");
 		};
 	});
 });

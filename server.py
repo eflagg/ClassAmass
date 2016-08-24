@@ -27,14 +27,14 @@ def show_search_results():
     try:
         q = db.session.query(Course).filter((Course.title.ilike('%' + phrase + '%')) | (Course.category.ilike('%' + phrase + '%')) | (Course.subcategory.ilike('%' + phrase + '%')))
         relevent_courses = q.all()
-        lang_query = db.session.query(Course.languages, func.count(Course.languages)).filter((Course.title.ilike('%' + phrase + '%')) | (Course.category.ilike('%' + phrase + '%')) | (Course.subcategory.ilike('%' + phrase + '%'))).group_by(Course.languages)
-        lang_stats = lang_query.all()
-        print lang_stats
+        # lang_query = db.session.query(Course.languages, func.count(Course.languages)).filter((Course.title.ilike('%' + phrase + '%')) | (Course.category.ilike('%' + phrase + '%')) | (Course.subcategory.ilike('%' + phrase + '%'))).group_by(Course.languages)
+        # lang_stats = lang_query.all()
+        # print lang_stats
         session['search-phrase'] = phrase
     except UnicodeEncodeError:
         pass
 
-    return render_template("search.html", courses=relevent_courses, phrase=phrase, lang_stats=lang_stats)
+    return render_template("search.html", courses=relevent_courses, phrase=phrase)
 
 
 @app.route("/search/filters.json")
@@ -101,12 +101,12 @@ def filter_results():
     args = tuple(args)
 
     query = q.filter(*args)
-    lang_query = db.session.query(Course.languages, func.count(Course.languages)).filter(*args).group_by(Course.languages)
+    # lang_query = db.session.query(Course.languages, func.count(Course.languages)).filter(*args).group_by(Course.languages)
     # print "lq ", lang_query
 
     try:
         courses = query.all()
-        lang_stats = lang_query.all()
+        # lang_stats = lang_query.all()
         # print "ls ", lang_stats
     except UnicodeEncodeError:
         pass
@@ -116,10 +116,10 @@ def filter_results():
     course_dict = {}
     for course_id, title, description, picture, url, workload, price in courses:
         course_dict[course_id] = {'title': title, 'description': description, 'picture': picture, 'price': price, 'url': url, 'workload': workload}
-    lang_dict = {}
-    for lang, count in lang_stats:
-        lang_dict[lang] = count
-    print "ld: ", lang_dict
+    # lang_dict = {}
+    # for lang, count in lang_stats:
+    #     lang_dict[lang] = count
+    # print "ld: ", lang_dict
 
     return jsonify(course_dict)
 
@@ -214,16 +214,19 @@ def favorite_course():
     if email: 
         course_id = request.form.get("id")
         user = User.query.filter_by(email=email).one()
-        check_course = Courses_Favorited.query.filter_by(user_id=user.user_id, course_id=course_id).first()
-        if not check_course:
+        check_fav_courses = Courses_Favorited.query.filter_by(user_id=user.user_id, course_id=course_id).first()
+        check_taken_courses = Courses_Taken.query.filter_by(user_id=user.user_id, course_id=course_id).first()
+        if (not check_fav_courses) and (not check_taken_courses):
             favorite_course = Courses_Favorited(user_id=user.user_id, course_id=course_id)
             db.session.add(favorite_course)
             db.session.commit()
             alert = "You have successfully added this course to your favorites list!"
+        elif (check_taken_courses) and (not check_fav_courses):
+            alert = "You've already taken this course!"
         else:
             alert = "You have already added this course to your favorites list!"
     if not email:
-        print "Hi"
+        # print "Hi"
         alert = "You must be signed in to favorite a course!"
         
     return jsonify({'alert': alert})
@@ -251,12 +254,15 @@ def add_course_taken():
     if email: 
         course_id = request.form.get("id")
         user = User.query.filter_by(email=email).one()
-        check_course = Courses_Taken.query.filter_by(user_id=user.user_id, course_id=course_id).first()
-        if not check_course:
+        check_taken_courses = Courses_Taken.query.filter_by(user_id=user.user_id, course_id=course_id).first()
+        check_fav_courses = Courses_Favorited.query.filter_by(user_id=user.user_id, course_id=course_id).first()
+        if (not check_taken_courses) and (not check_fav_courses):
             taken_course = Courses_Taken(user_id=user.user_id, course_id=course_id)
             db.session.add(taken_course)
             db.session.commit()
             alert = "You have successfully added this course to your taken courses list!"
+        elif (check_fav_courses) and (not check_taken_courses):
+            alert = "This course is in your favorites list!"
         else:
             alert = "You have already added this course to your taken courses list!"
     if not email:
@@ -282,11 +288,25 @@ def move_course_from_fav_to_taken_list():
     return jsonify()
 
 
+@app.route("/remove_from_taken", methods=["POST"])
+def remove_taken_course():
+    """Remove taken course of user from courses_taken table."""
+
+    course_id = request.form.get("id")
+    email = session.get("current_user")
+    user = User.query.filter_by(email=email).one()
+    course = Courses_Taken.query.filter_by(user_id=user.user_id, course_id=course_id).first()
+    db.session.delete(course)
+    db.session.commit()
+
+    return jsonify()
+
+
 if __name__ == "__main__":
     app.debug = True
 
     connect_to_db(app)
 
-    DebugToolbarExtension(app)
+    # DebugToolbarExtension(app)
 
     app.run(host="0.0.0.0")

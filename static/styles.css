@@ -14,6 +14,20 @@
 	margin-bottom: 50px;
 }
 
+.welcome-note {
+	text-align: center;
+	margin-top: 60px;
+}
+
+.class-heading {
+	margin-left: 50px;
+}
+
+.profile {
+	margin-left: 200px;
+	margin-right: 1000px;
+}
+
 .navbar-fixed-top {
 	margin-bottom: 0;
 }
@@ -24,9 +38,8 @@
   width: 200px;
   position: fixed;
   border-radius: 0;
-  height: 80%;
+  height: 100%;
   overflow-y: auto;
-  margin-left: 20px;
 }
 
 .navbar-fixed-left .navbar-nav > li {
@@ -46,7 +59,7 @@
 
 #form-div {
 	color: white;
-	font-size: 12px;
+	font-size: 15px;
 }
 
 #result-number {
@@ -105,4 +118,17 @@
 
 .profile-div {
 	margin-top: 60px;
+}
+
+.side-nav-input-text {
+	color: black;
+}
+
+#sorry-none {
+	margin-top: 60px;
+}
+
+#main-search-div {
+	margin-left: 275px;
+	margin-right: 25px;
 }
