@@ -27,14 +27,36 @@ def show_search_results():
     try:
         q = db.session.query(Course).filter((Course.title.ilike('%' + phrase + '%')) | (Course.category.ilike('%' + phrase + '%')) | (Course.subcategory.ilike('%' + phrase + '%')))
         relevent_courses = q.all()
-        # lang_query = db.session.query(Course.languages, func.count(Course.languages)).filter((Course.title.ilike('%' + phrase + '%')) | (Course.category.ilike('%' + phrase + '%')) | (Course.subcategory.ilike('%' + phrase + '%'))).group_by(Course.languages)
-        # lang_stats = lang_query.all()
-        # print lang_stats
+        lang_query = db.session.query(Course.languages, func.count(Course.languages)).filter((Course.title.ilike('%' + phrase + '%')) | (Course.category.ilike('%' + phrase + '%')) | (Course.subcategory.ilike('%' + phrase + '%'))).group_by(Course.languages)
+        lang_stats = lang_query.all()
+        print lang_stats
         session['search-phrase'] = phrase
     except UnicodeEncodeError:
         pass
 
     return render_template("search.html", courses=relevent_courses, phrase=phrase)
+
+
+@app.context_processor
+def utility_processor():
+    def find_lang_nums(language):
+        """Find number of courses for each language."""
+
+        phrase = session['search-phrase']
+
+        lang_query = db.session.query(Course.languages, func.count(Course.languages)).filter((Course.title.ilike('%' + phrase + '%')) | (Course.category.ilike('%' + phrase + '%')) | (Course.subcategory.ilike('%' + phrase + '%'))).group_by(Course.languages)
+        lang_stats = lang_query.all()
+        lang_dict = {}
+        for lang, count in lang_stats:
+            lang_dict[lang] = count
+        # print "lang dict ", lang_dict
+        # print "language ", language
+        if language in lang_dict:
+            # print "count ", lang_dict[language]
+            return lang_dict[language]
+        else:
+            return 0
+    return dict(find_lang_nums=find_lang_nums)
 
 
 @app.route("/search/filters.json")
