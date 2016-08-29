@@ -31,7 +31,7 @@
 .navbar-fixed-left {
   margin-top: 20px;
   padding: 15px; 
-  width: 15%;
+  width: 20%;
   position: fixed;
   border-radius: 0;
   height: 100%;
@@ -40,7 +40,8 @@
 
 #form-div {
 	color: white;
-	font-size: 15px;
+	padding-bottom: 35px;
+/*	font-size: 15px;*/
 }
 
 #result-number {
@@ -96,3 +97,15 @@
 #sorry-none {
 	margin-top: 60px;
 }
+
+.side-nav-category {
+	font-size: 16px;
+}
+
+input {
+	font-size: 12px;
+}
+
+/*li + input {
+	font-size: 12px;
+}*/

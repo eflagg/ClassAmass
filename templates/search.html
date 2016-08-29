@@ -5,76 +5,152 @@
   <ul class="nav nav-pills nav-stacked" data-spy="affix" data-offset-top="205">
     <div id="form-div">
 	<form action='/search/filters/fake' id="filters-form">
-		<li>
+		<li class="side-nav-category">
 			Search: 
 			<input type="text" class="side-nav-input-text" name="search-phrase" value={{ phrase }}>
 			</input>
 		</li>
 		<li class="divider"></li><br>
-		<li>
+		<li class="side-nav-category">
 			Max Price: 
 			<input type="number" class="side-nav-input-text" name="price" id="price-field">
 			</input>
 		</li>
 		<li class="divider"></li><br>
-		<li>
-			Language:<br>
-			<span id="extra-langs">
-			<input id="en" type="checkbox" name="languages" value="en" >
-				English ({{ find_lang_nums("en") }})
-			</input><br>
-			<input type="checkbox" id="chinese" name="languages" value="zh-CN">
-				Chinese (simplified) ({{ find_lang_nums("zh-CN") }})
-			</input><br>
-			<input type="checkbox" name="languages" value="fr">
-				French ({{ find_lang_nums("fr") }})
+		<li id="languages-side-nav" class="side-nav-category">
+			Languages:<br>
+			<input type="checkbox" name="languages" value="en" >
+				English (<span id="en">{{ langs["en"] }}</span>)
 			</input><br>
 			<input type="checkbox" name="languages" value="es">
-				Spanish ({{ find_lang_nums("es") }})
-			</input><br>
-			<input type="checkbox" name="languages" value="ja">
-				Japonese ({{ find_lang_nums("ja") }})
-			</input><br>
-			<input type="checkbox" name="languages" value="ko">
-				Korean ({{ find_lang_nums("ko") }})
+				Spanish (<span id="es">{{ langs["es"] }}</span>)
 			</input><br>
 			<input type="checkbox" name="languages" value="pt">
-				Portuguese ({{ find_lang_nums("pt") }})
-			</input><br>
-			<input type="checkbox" name="languages" value="it">
-				Italian ({{ find_lang_nums("it") }})
-			</input><br>
-			<input type="checkbox" name="languages" value="tr">
-				Turkish ({{ find_lang_nums("tr") }})
-			</input><br>
-			<input type="checkbox" name="languages" value="ru">
-				Russian ({{ find_lang_nums("ru") }})
-			</input><br>
-			<input type="checkbox" name="languages" value="zh-TW">
-				Chinese (traditional) ({{ find_lang_nums("zh-TW") }})
-			</input><br>
-			<input type="checkbox" name="languages" value="ar">
-				Arabic ({{ find_lang_nums("ar") }})
+				Portuguese (<span id="pt">{{ langs["pt"] }}</span>)
 			</input><br>
 			<input type="checkbox" name="languages" value="de">
-				German ({{ find_lang_nums("de") }})
+				German (<span id="de">{{ langs["de"] }}</span>)
 			</input><br>
-			<input type="checkbox" name="languages" value="sv">
-				Swedish ({{ find_lang_nums("sv") }})
+			<input type="checkbox" name="languages" value="ja">
+				Japanese (<span id="ja">{{ langs["ja"] }}</span>)
 			</input><br>
-			<input type="checkbox" name="languages" value="he">
-				Hebrew ({{ find_lang_nums("he") }})
+			<span id="extra-langs">
+			<input type="checkbox" id="chinese" name="languages" value="zh-CN">
+				Chinese (simplified) (<span id="zh-CN">{{ langs["zh-CN"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="fr">
+				French (<span id="fr">{{ langs["fr"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="ar">
+				Arabic (<span id="ar">{{ langs["ar"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="ru">
+				Russian (<span id="ru">{{ langs["ru"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="tr">
+				Turkish (<span id="tr">{{ langs["tr"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="it">
+				Italian (<span id="it">{{ langs["it"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="th">
+				Thai (<span id="th">{{ langs["th"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="ko">
+				Korean (<span id="ko">{{ langs["ko"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="hi">
+				Hindi (<span id="hi">{{ langs["hi"] }}</span>)
 			</input><br>
 			<input type="checkbox" name="languages" value="nl">
-				Dutch ({{ find_lang_nums("nl") }})
-			</input>
+				Dutch (<span id="nl">{{ langs["nl"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="he">
+				Hebrew (<span id="he">{{ langs["he"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="zh-TW">
+				Chinese (traditional) (<span id="zh-TW">{{ langs["zh-TW"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="ur">
+				Urdu (<span id="ur">{{ langs["ur"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="vi">
+				Vietnamese (<span id="vi">{{ langs["vi"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="el">
+				Greek (<span id="el">{{ langs["el"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="pl">
+				Polish (<span id="pl">{{ langs["pl"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="hr">
+				Croatian (<span id="hr">{{ langs["hr"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="da">
+				Danish (<span id="da">{{ langs["da"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="fa">
+				Farsi (<span id="fa">{{ langs["fa"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="hu">
+				Hungarian (<span id="hu">{{ langs["hu"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="id">
+				Indonesian (<span id="id">{{ langs["id"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="af">
+				Afrikaans (<span id="af">{{ langs["af"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="bg">
+				Bulgarian (<span id="bg">{{ langs["bg"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="fi">
+				Finnish (<span id="fi">{{ langs["fi"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="lv">
+				Latvian (<span id="lv">{{ langs["lv"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="nb">
+				Norwegian (<span id="nb">{{ langs["nb"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="sv">
+				Swedish (<span id="sv">{{ langs["sv"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="tl">
+				Tagalog (<span id="tl">{{ langs["tl"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="uk">
+				Ukranian (<span id="uk">{{ langs["uk"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="az">
+				Azerbaijani (<span id="az">{{ langs["az"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="mr">
+				Marathi (<span id="mr">{{ langs["mr"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="ms">
+				Malay (<span id="ms">{{ langs["ms"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="sk">
+				Slovak (<span id="sk">{{ langs["sk"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="sr">
+				Serbian (<span id="sr">{{ langs["sr"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="et">
+				Estonian (<span id="et">{{ langs["et"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="ta">
+				Tamil (<span id="ta">{{ langs["ta"] }}</span>)
+			</input><br>
+			<input type="checkbox" name="languages" value="uz">
+				Uzbek (<span id="uz">{{ langs["uz"] }}</span>)
+			</input><br>
 			</span><br>
-			<a id="show-lang">
-				Show More
-			</a>
+			<a id="show-lang">Show More</a>
 		</li>
 		<li class="divider"></li><br>
-		<li>
+		<li class="side-nav-category">
 			Instructor or Self led:<br>
 			<input type="radio" name="coursetype" value="self">
 				Self Led
@@ -84,7 +160,7 @@
 			</input>
 		</li>
 		<li class="divider"></li><br>
-		<li>
+		<li class="side-nav-category">
 			Certificates:<br>
 			<input type="radio" name="certificates" value="yes">
 				Has Certificates
@@ -94,7 +170,7 @@
 			</input>
 		</li>
 		<li class="divider"></li><br>
-		<li>
+		<li class="side-nav-category">
 			Source:<br>
 			<input type="checkbox" name="source" value="Coursera">
 				Coursera
@@ -103,64 +179,446 @@
 				Udemy
 			</input></li>
 		<li class="divider"></li><br>
-		<li>
-			University:<br>
-			<span id="extra-unis">
-			<input type="checkbox" name="university" value="Harvard University">
-				Harvard University
+		<li class="side-nav-category">
+			Universities:<br>
+			<input type="checkbox" name="university" value="6">
+				University of Pennsylvania
 			</input><br>
-			<input type="checkbox" name="university" value="1">
-				Stanford University
+			<input type="checkbox" name="university" value="17">
+				University of Illinois at Urbana-Champaign
 			</input><br>
-			<input type="checkbox" name="university" value="14">
-				The University of Edinburgh
+			<input type="checkbox" name="university" value="30">
+				University of California, Irvine
 			</input><br>
-			<input type="checkbox" name="university" value="109">
-				Yale University
+			<input type="checkbox" name="university" value="8">
+				Johns Hopkins University
+			</input><br>
+			<input type="checkbox" name="university" value="163">
+				Peking University
 			</input><br>
 			<input type="checkbox" name="university" value="3">
 				University of Michigan
 			</input><br>
-			<input type="checkbox" name="university" value="12">
-				Caltech
+			<span id="extra-unis">			
+			<input type="checkbox" name="university" value="53">
+				University of California, San Diego
 			</input><br>
-			<input type="checkbox" name="university" value="45">
-				The Chinese University of Hong Kong
+			<input type="checkbox" name="university" value="160">
+				Higher School of Economics
+			</input><br>
+			<input type="checkbox" name="university" value="7">
+				Duke University
+			</input><br>
+			<input type="checkbox" name="university" value="9">
+				Georgia Instititue of Technology
+			</input><br>
+			<input type="checkbox" name="university" value="16">
+				École Polytechnique Fédérale de Lausanne
+			</input><br>
+			<input type="checkbox" name="university" value="62">
+				Tecnológico de Monterrey
+			</input><br>
+			<input type="checkbox" name="university" value="1">
+				Stanford University
+			</input><br>
+			<input type="checkbox" name="university" value="75">
+				National Taiwan University
+			</input><br>
+			<input type="checkbox" name="university" value="32">
+				University of Maryland, College Park
+			</input><br>
+			<input type="checkbox" name="university" value="15">
+				University of Washington
+			</input><br>
+			<input type="checkbox" name="university" value="58">
+				Universidad Nacional Autónoma de México
+			</input><br>
+			<input type="checkbox" name="university" value="54">
+				Northwestern University
+			</input><br>
+			<input type="checkbox" name="university" value="26">
+				University of London
+			</input><br>
+			<input type="checkbox" name="university" value="18">
+				University of Virginia
+			</input><br>
+			<input type="checkbox" name="university" value="14">
+				The University of Edinburgh
+			</input><br>
+			<input type="checkbox" name="university" value="49">
+				University of Geneva
+			</input><br>
+			<input type="checkbox" name="university" value="50">
+				University of Minnesota
+			</input><br>
+			<input type="checkbox" name="university" value="287">
+				Arizona State University
+			</input><br>
+			<input type="checkbox" name="university" value="61">
+				IE Business School
+			</input><br>
+			<input type="checkbox" name="university" value="228">
+				Michigan State University
+			</input><br>
+			<input type="checkbox" name="university" value="83">
+				University of California, Davis
+			</input><br>
+			<input type="checkbox" name="university" value="33">
+				The University of Melbourne
+			</input><br>
+			<input type="checkbox" name="university" value="117">
+				The State University of New York
 			</input><br>
 			<input type="checkbox" name="university" value="34">
 				Wesleyan University
 			</input><br>
-			<input type="checkbox" name="university" value="120">
-				University of New Mexico
+			<input type="checkbox" name="university" value="13">
+				Rice University
 			</input><br>
-			<input type="checkbox" name="university" value="93">
-				University of Zurich
+			<input type="checkbox" name="university" value="35">
+				The Hong Kong University of Science and Technology
 			</input><br>
-			<input type="checkbox" name="university" value="182">
-				Koc University
+			<input type="checkbox" name="university" value="80">
+				Universitat Autònoma de Barcelona
 			</input><br>
-			<input type="checkbox" name="university" value="147">
-				Unviersity of Manchester
+			<input type="checkbox" name="university" value="71">
+				University of Colorado, Boulder
+			</input><br>
+			<input type="checkbox" name="university" value="37">
+				Vanderbilt University
+			</input><br>
+			<input type="checkbox" name="university" value="4">
+				Princeton University
+			</input><br>
+			<input type="checkbox" name="university" value="21">
+				Berklee
 			</input><br>
 			<input type="checkbox" name="university" value="223">
 				ESSEC Business School
 			</input><br>
+			<input type="checkbox" name="university" value="176">
+				Moscow Institute of Physics and Technology
+			</input><br>
+			<input type="checkbox" name="university" value="276">
+				National Research Tomsk State University
+			</input><br>
+			<input type="checkbox" name="university" value="28">
+				The Ohio State University
+			</input><br>
+			<input type="checkbox" name="university" value="25">
+				Universiteit Leiden
+			</input><br>
+			<input type="checkbox" name="university" value="273">
+				Universidad de los Andes
+			</input><br>
+			<input type="checkbox" name="university" value="126">
+				University of Colorado System
+			</input><br>
+			<input type="checkbox" name="university" value="220">
+				Yonsei University
+			</input><br>
+			<input type="checkbox" name="university" value="">
+				Fudan University
+			</input><br>
+			<input type="checkbox" name="university" value="11">
+				University of Toronto
+			</input><br>
+			<input type="checkbox" name="university" value="109">
+				Yale University
+			</input><br>
+			<input type="checkbox" name="university" value="59">
+				California Institute of the Arts
+			</input><br>
+			<input type="checkbox" name="university" value="161">
+				HEC Paris
+			</input><br>
+			<input type="checkbox" name="university" value="150">
+				Shanghai Jiao Tong University
+			</input><br>
+			<input type="checkbox" name="university" value="31">
+				University of Florida
+			</input><br>
+			<input type="checkbox" name="university" value="120">
+				University of New Mexico
+			</input><br>
+			<input type="checkbox" name="university" value="106">
+				Commonwealth Education Trust
+			</input><br>
 			<input type="checkbox" name="university" value="66">
 				Ecole Polytechnique
+			</input><br>
+			<input type="checkbox" name="university" value="23">
+				Emory University
+			</input><br>
+			<input type="checkbox" name="university" value="47">
+				National University of Singapore
+			</input><br>
+			<input type="checkbox" name="university" value="146">
+				University of Alberta
+			</input><br>
+			<input type="checkbox" name="university" value="10">
+				University of California, San Francisco
+			</input><br>
+			<input type="checkbox" name="university" value="252">
+				Instituto Tecnológico de Aeronáutica
+			</input><br>
+			<input type="checkbox" name="university" value="230">
+				Nanjing University
+			</input><br>
+			<input type="checkbox" name="university" value="281">
+				National Research Nuclear University MEPhI
+			</input><br>
+			<input type="checkbox" name="university" value="110">
+				Tel Aviv University
+			</input><br>
+			<input type="checkbox" name="university" value="77">
+				The University of North Carolina at Chapel Hill
+			</input><br>
+			<input type="checkbox" name="university" value="63">
+				University of Copenhagen
+			</input><br>
+			<input type="checkbox" name="university" value="119">
+				University of Houston System
+			</input><br>
+			<input type="checkbox" name="university" value="60">
+				University of Rochester
+			</input><br>
+			<input type="checkbox" name="university" value="234">
+				Xi'an Jiaotong University
+			</input><br>
+			<input type="checkbox" name="university" value="68">
+				Case Western Reserve University
+			</input><br>
+			<input type="checkbox" name="university" value="64">
+				Ludwig-Maximilians-Universität München (LMU)
 			</input><br>
 			<input type="checkbox" name="university" value="51">
 				The Pennsylvania State University
 			</input><br>
-			<input type="checkbox" name="university" value="163">
-				Peking University
-			</input>
+			<input type="checkbox" name="university" value="27">
+				Icahn School of Medicine at Mount Sinai
+			</input><br>
+			<input type="checkbox" name="university" value="208">
+				Universidade Estadual de Campinas
+			</input><br>
+			<input type="checkbox" name="university" value="147">
+				Unviersity of Manchester
+			</input><br>
+			<input type="checkbox" name="university" value="40">
+				Columbia University
+			</input><br>
+			<input type="checkbox" name="university" value="175">
+				Copenhagen Business School
+			</input><br>
+			<input type="checkbox" name="university" value="172">
+				IESE Business School
+			</input><br>
+			<input type="checkbox" name="university" value="190">
+				Pontificia Universidad Católica de Chile
+			</input><br>
+			<input type="checkbox" name="university" value="210">
+				Sciences Po
+			</input><br>
+			<input type="checkbox" name="university" value="129">
+				Technion - Israel Institute of Technology
+			</input><br>
+			<input type="checkbox" name="university" value="45">
+				The Chinese University of Hong Kong
+			</input><br>
+			<input type="checkbox" name="university" value="131">
+				University of Amsterdam
+			</input><br>
+			<input type="checkbox" name="university" value="123">
+				University System of Georgia
+			</input><br>
+			<input type="checkbox" name="university" value="12">
+				Caltech
+			</input><br>
+			<input type="checkbox" name="university" value="253">
+				EIT Digital
+			</input><br>
+			<input type="checkbox" name="university" value="24">
+				Hebrew University of Jerusalum
+			</input><br>
+			<input type="checkbox" name="university" value="102">
+				The University of Chicago
+			</input><br>
+			<input type="checkbox" name="university" value="264">
+				The University of Sydney
+			</input><br>
+			<input type="checkbox" name="university" value="73">
+				The World Bank Group
+			</input><br>
+			<input type="checkbox" name="university" value="36">
+				University of Pittsburgh
+			</input><br>
+			<input type="checkbox" name="university" value="128">
+				CentraleSupélec 
+			</input><br>
+			<input type="checkbox" name="university" value="130">
+				École normale supérieure 
+			</input><br>
+			<input type="checkbox" name="university" value="215">
+				Indian School of Business
+			</input><br>
+			<input type="checkbox" name="university" value="182">
+				Koç University
+			</input><br>
+			<input type="checkbox" name="university" value="178">
+				Korea Advanced Institute of Science and Technology
+			</input><br>
+			<input type="checkbox" name="university" value="148">
+				McMaster University
+			</input><br>
+			<input type="checkbox" name="university" value="103">
+				New Teacher Center
+			</input><br>
+			<input type="checkbox" name="university" value="57">
+				Technical University of Denmark (DTU)
+			</input><br>
+			<input type="checkbox" name="university" value="157">
+				Università Bocconi
+			</input><br>
+			<input type="checkbox" name="university" value="212">
+				Universitat de Barcelona
+			</input><br>
+			<input type="checkbox" name="university" value="233">
+				University of Science and Technology of China
+			</input><br>
+			<input type="checkbox" name="university" value="93">
+				University of Zurich
+			</input><br>
+			<input type="checkbox" name="university" value="155">
+				UNSW Australia (The University of New South Wales)
+			</input><br>
+			<input type="checkbox" name="university" value="224">
+				Fundação Lemann
+			</input><br>
+			<input type="checkbox" name="university" value="199">
+				Lund University
+			</input><br>
+			<input type="checkbox" name="university" value="67">
+				Rutgers the State University of New Jersey
+			</input><br>
+			<input type="checkbox" name="university" value="100">
+				American Museum of Natural History
+			</input><br>
+			<input type="checkbox" name="university" value="22">
+				Brown University
+			</input><br>
+			<input type="checkbox" name="university" value="107">
+				The Museum of Modern Art
+			</input><br>
+			<input type="checkbox" name="university" value="76">
+				The University of Tokyo
+			</input><br>
+			<input type="checkbox" name="university" value="56">
+				University of California, Santa Cruz
+			</input><br>
+			<input type="checkbox" name="university" value="159">
+				University of Lausanne
+			</input><br>
+			<input type="checkbox" name="university" value="156">
+				University of Western Australia
+			</input><br>
+			<input type="checkbox" name="university" value="79">
+				Curtis Institue of Music
+			</input><br>
+			<input type="checkbox" name="university" value="244">
+				Erasmus University Rotterdam
+			</input><br>
+			<input type="checkbox" name="university" value="108">
+				Exploratorium
+			</input><br>
+			<input type="checkbox" name="university" value="251">
+				High Tech High Graduate School of Education
+			</input><br>
+			<input type="checkbox" name="university" value="297">
+				Institut Mines-Télécom
+			</input><br>
+			<input type="checkbox" name="university" value="121">
+				Nanyang Technological University, Singapore
+			</input><br>
+			<input type="checkbox" name="university" value="221">
+				Universidade de São Paulo
+			</input><br>
+			<input type="checkbox" name="university" value="255">
+				University of Cape Town
+			</input><br>
+			<input type="checkbox" name="university" value="127">
+				University of Kentucky
+			</input><br>
+			<input type="checkbox" name="university" value="177">
+				Eindhoven University of Technology
+			</input><br>
+			<input type="checkbox" name="university" value="286">
+				emlyon business school
+			</input><br>
+			<input type="checkbox" name="university" value="277">
+				Insper
+			</input><br>
+			<input type="checkbox" name="university" value="105">
+				Match Teacher Residency
+			</input><br>
+			<input type="checkbox" name="university" value="154">
+				National Geographic Society
+			</input><br>
+			<input type="checkbox" name="university" value="275">
+				Novosibirsk State University
+			</input><br>
+			<input type="checkbox" name="university" value="104">
+				Relay Graduate School of Education
+			</input><br>
+			<input type="checkbox" name="university" value="74">
+				Sapienza University of Rome
+			</input><br>
+			<input type="checkbox" name="university" value="78">
+				Technische Universität München (TUM)
+			</input><br>
+			<input type="checkbox" name="university" value="280">
+				Universidad de Chile
+			</input><br>
+			<input type="checkbox" name="university" value="222">
+				University of Arizona
+			</input><br>
+			<input type="checkbox" name="university" value="270">
+				Utrecht University
+			</input><br>
+			<input type="checkbox" name="university" value="116">
+				West Virginia University
+			</input><br>
+			<input type="checkbox" name="university" value="271">
+				École des Ponts ParisTech
+			</input><br>
+			<input type="checkbox" name="university" value="282">
+				ESADE Business and Law School
+			</input><br>
+			<input type="checkbox" name="university" value="207">
+				ESCP Europe
+			</input><br>
+			<input type="checkbox" name="university" value="348">
+				IBM
+			</input><br>
+			<input type="checkbox" name="university" value="254">
+				Macquarie University
+			</input><br>
+			<input type="checkbox" name="university" value="313">
+				Saint Petersburg State University
+			</input><br>
+			<input type="checkbox" name="university" value="331">
+				The George Washington University
+			</input><br>
+			<input type="checkbox" name="university" value="124">
+				University of Nebraska
+			</input><br>
+			<input type="checkbox" name="university" value="265">
+				Yeshiva University
+			</input><br>
 			</span><br>
-			<button id="show-uni" type="button" class="btn btn-primary btn-xs">
-				Show More
-			</button><br>
+			<button id="show-uni" type="button" class="btn btn-primary btn-xs">Show More</button><br>
 		</li>
 		<li class="divider"></li><br>
-		<input type="submit" id="filters" value="Apply Filters" ></input>
+		<input type="submit" id="filters" value="Apply Filters"></input>
 	</form>
 	</div>
 	</ul>
@@ -195,7 +653,7 @@
      				Free
      			{% endif %}</p>
      			<button type="button" id="{{ course.course_id}}" class="btn btn-danger favorite-button btn-xs">Favorite</button>
-	 			<button type="button" id="{{ course.course_id}}" class="btn btn-success taken-button btn-xs">Taken</button>
+     			<button type="button" id="{{ course.course_id}}" class="btn btn-success taken-button btn-xs">Taken</button>
   			</div>
 			</div>
 			{% endfor %}

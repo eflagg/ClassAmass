@@ -53,6 +53,8 @@ def load_coursera_courses():
 			url = "https://www.coursera.org/learn/" + slug
 
 			languages = element.get('primaryLanguages', '<unknown>')
+			if "zh" in languages:
+				languages = "zh"
 			languages =  ", ".join(languages)
 
 			subtitles = element.get('subtitleLanguages', '<unknown>')

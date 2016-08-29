@@ -18,6 +18,28 @@ def index_page():
     return render_template("index.html")
 
 
+# @app.route("/browse")
+# def show_all_courses():
+#     """Show all courses for user to browse."""
+
+#     try:
+#         q = db.session.query(Course)
+#         q.all()
+#         lang_query = db.session.query(Course.languages, func.count(Course.languages)).group_by(Course.languages)
+#         lang_stats  = lang_query.all()
+#         lang_dict = {'el': 0, 'en': 0, 'zh': 0, 'af': 0, 'vi': 0, 'it': 0, 'ar': 0, 'et': 0, 'az': 0, 'id': 0, 'es': 0, 'ru': 0, 
+#         'sr': 0, 'nl': 0, 'pt': 0, 'nb': 0, 'tr': 0, 'lv': 0, 'tl': 0, 'th': 0, 'ro': 0, 'pl': 0, 'ta': 0, 'fr': 0, 'bg': 0, 
+#         'ms': 0, 'hr': 0, 'de': 0, 'hu': 0, 'fa': 0, 'hi': 0, 'pt-BR': 0, 'fi': 0, 'da': 0, 'ja': 0, 'he': 0, 'uz': 0, 'pt-PT': 0, 
+#         'zh-TW': 0, 'ko': 0, 'sv': 0, 'ur': 0, 'sk': 0, 'zh-CN': 0, 'uk': 0, 'mr': 0}
+#         for lang, count in lang_stats:
+#             lang_dict[lang] = count
+#     except UnicodeEncodeError:
+#         pass
+
+#     return render_template("search.html", courses=relevent_courses, langs=lang_dict)
+
+
+
 @app.route("/search")
 def show_search_results():
     """Show search results based on user input parameters."""
@@ -29,41 +51,79 @@ def show_search_results():
         relevent_courses = q.all()
         lang_query = db.session.query(Course.languages, func.count(Course.languages)).filter((Course.title.ilike('%' + phrase + '%')) | (Course.category.ilike('%' + phrase + '%')) | (Course.subcategory.ilike('%' + phrase + '%'))).group_by(Course.languages)
         lang_stats = lang_query.all()
-        print lang_stats
+        lang_dict = {'el': 0, 'en': 0, 'zh': 0, 'af': 0, 'vi': 0, 'it': 0, 'ar': 0, 'et': 0, 'az': 0, 'id': 0, 'es': 0, 'ru': 0, 
+        'sr': 0, 'nl': 0, 'pt': 0, 'nb': 0, 'tr': 0, 'lv': 0, 'tl': 0, 'th': 0, 'ro': 0, 'pl': 0, 'ta': 0, 'fr': 0, 'bg': 0, 
+        'ms': 0, 'hr': 0, 'de': 0, 'hu': 0, 'fa': 0, 'hi': 0, 'pt-BR': 0, 'fi': 0, 'da': 0, 'ja': 0, 'he': 0, 'uz': 0, 'pt-PT': 0, 
+        'zh-TW': 0, 'ko': 0, 'sv': 0, 'ur': 0, 'sk': 0, 'zh-CN': 0, 'uk': 0, 'mr': 0}
+        for lang, count in lang_stats:
+            lang_dict[lang] = count
+        # print lang_stats
         session['search-phrase'] = phrase
     except UnicodeEncodeError:
         pass
 
-    return render_template("search.html", courses=relevent_courses, phrase=phrase)
+    return render_template("search.html", courses=relevent_courses, phrase=phrase, langs=lang_dict)
 
 
-@app.context_processor
-def utility_processor():
-    def find_lang_nums(language):
-        """Find number of courses for each language."""
+# @app.context_processor
+# def utility_processor():
+#     def find_lang_nums(language):
+#         """Find number of courses for each language."""
 
-        phrase = session['search-phrase']
+#         phrase = session['search-phrase']
+#         # del session['search-phrase']
+#         args = [(Course.title.ilike('%' + phrase + '%')) | (Course.category.ilike('%' + phrase + '%')) | (Course.subcategory.ilike('%' + phrase + '%'))]
+#         q = db.session.query(Course.languages, func.count(Course.languages))
 
-        lang_query = db.session.query(Course.languages, func.count(Course.languages)).filter((Course.title.ilike('%' + phrase + '%')) | (Course.category.ilike('%' + phrase + '%')) | (Course.subcategory.ilike('%' + phrase + '%'))).group_by(Course.languages)
-        lang_stats = lang_query.all()
-        lang_dict = {}
-        for lang, count in lang_stats:
-            lang_dict[lang] = count
-        # print "lang dict ", lang_dict
-        # print "language ", language
-        if language in lang_dict:
-            # print "count ", lang_dict[language]
-            return lang_dict[language]
-        else:
-            return 0
-    return dict(find_lang_nums=find_lang_nums)
+#         price = session.get('price')
+#         del session['price']
+#         languages = session.get('languages')
+#         course_type = session.get('type')
+#         certificate = session.get('certificate')
+#         source = session.get('source')
+#         university = session.get('university')
+
+#         if price:
+#             price_arg = Course.price <= price
+#             args.append(price_arg)
+#             # print "price ", price
+#         if languages:
+#             args.append(languages)
+#             print "1", args
+#         if course_type:
+#             args.append(course_type)
+#             print "2", args
+#         if certificate:
+#             args.append(certificate)
+#             print "3", args
+#         if source:
+#             args.append(source)
+#             print "4", args
+#         if university:
+#             q = db.session.query(Course.languages, func.count(Course.languages)).join(CoursePartner).join(Partner)
+#             args.insert(0, university)
+#             print "5", args
+#         # lang_query = db.session.query(Course.languages, func.count(Course.languages)).filter((Course.title.ilike('%' + phrase + '%')) | (Course.category.ilike('%' + phrase + '%')) | (Course.subcategory.ilike('%' + phrase + '%'))).group_by(Course.languages)
+#         args = tuple(args)
+#         lang_query = q.filter(*args).group_by(Course.languages)
+#         lang_stats = lang_query.all()
+#         lang_dict = {}
+#         for lang, count in lang_stats:
+#             lang_dict[lang] = count
+#         print "lang dict ", lang_dict
+#         # print "language ", language
+#         if language in lang_dict:
+#             # print "count ", lang_dict[language]
+#             return lang_dict[language]
+#         else:
+    #     return 0
+    # return dict(find_lang_nums=find_lang_nums)
+    # return dict()
 
 
 @app.route("/search/filters.json")
 def filter_results():
     """ Filter resuts based on user input parameters."""
-
-    # phrase = session['search-phrase']
 
     price = request.args.get("price")
     languages = request.args.getlist("languages")
@@ -92,6 +152,7 @@ def filter_results():
     if course_type == "self":
         type_arg = ((Course.course_type.like('%ondemand%')) | (Course.course_type == None))
         args.append(type_arg)
+        # session['type'] = type_arg
     elif course_type == "instructor":
         type_arg = Course.course_type.like('%session%')
         args.append(type_arg)
@@ -106,6 +167,7 @@ def filter_results():
 
     if source == "Coursera":
         source_arg = (Course.source == "Coursera")
+        print "source arg ", source_arg
         args.append(source_arg)
     if source == "Udemy":
         source_arg = (Course.source == "Udemy")
@@ -121,14 +183,15 @@ def filter_results():
         university_arg = None
     
     args = tuple(args)
+    print "args ", args
 
     query = q.filter(*args)
-    # lang_query = db.session.query(Course.languages, func.count(Course.languages)).filter(*args).group_by(Course.languages)
+    lang_query = db.session.query(Course.languages, func.count(Course.languages)).filter(*args).group_by(Course.languages)
     # print "lq ", lang_query
 
     try:
         courses = query.all()
-        # lang_stats = lang_query.all()
+        lang_stats = lang_query.all()
         # print "ls ", lang_stats
     except UnicodeEncodeError:
         pass
@@ -138,12 +201,21 @@ def filter_results():
     course_dict = {}
     for course_id, title, description, picture, url, workload, price in courses:
         course_dict[course_id] = {'title': title, 'description': description, 'picture': picture, 'price': price, 'url': url, 'workload': workload}
-    # lang_dict = {}
-    # for lang, count in lang_stats:
-    #     lang_dict[lang] = count
+    lang_dict = {'el': 0, 'en': 0, 'zh': 0, 'af': 0, 'vi': 0, 'it': 0, 'ar': 0, 'et': 0, 'az': 0, 'id': 0, 'es': 0, 'ru': 0, 
+        'sr': 0, 'nl': 0, 'pt': 0, 'nb': 0, 'tr': 0, 'lv': 0, 'tl': 0, 'th': 0, 'ro': 0, 'pl': 0, 'ta': 0, 'fr': 0, 'bg': 0, 
+        'ms': 0, 'hr': 0, 'de': 0, 'hu': 0, 'fa': 0, 'hi': 0, 'pt-BR': 0, 'fi': 0, 'da': 0, 'ja': 0, 'he': 0, 'uz': 0, 'pt-PT': 0, 
+        'zh-TW': 0, 'ko': 0, 'sv': 0, 'ur': 0, 'sk': 0, 'zh-CN': 0, 'uk': 0, 'mr': 0}
+    for lang, count in lang_stats:
+        lang_dict[lang] = count
     # print "ld: ", lang_dict
+    # print "course dict ", course_dict
+    results = {}
+    results['courses'] = course_dict
+    results['lang_counts'] = lang_dict
+    results['phrase'] = phrase
+    # print results['lang_counts']
 
-    return jsonify(course_dict)
+    return jsonify(results)
 
 
 @app.route("/register")
@@ -329,6 +401,6 @@ if __name__ == "__main__":
 
     connect_to_db(app)
 
-    # DebugToolbarExtension(app)
+    DebugToolbarExtension(app)
 
     app.run(host="0.0.0.0")
