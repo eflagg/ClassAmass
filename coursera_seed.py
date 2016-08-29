@@ -47,15 +47,18 @@ def load_coursera_courses():
 			title = element.get('name', '<unknown>')
 			description = element.get('description', '<unknown>')
 
-			course_type = element.get('courseType', '<unknown>')
+			# course_type = element.get('courseType', '<unknown>')
+			course_type = "instructor"
 
 			slug = element.get('slug', '<unknown>')
 			url = "https://www.coursera.org/learn/" + slug
 
 			languages = element.get('primaryLanguages', '<unknown>')
-			if "zh" in languages:
-				languages = "zh"
-			languages =  ", ".join(languages)
+			language =  "".join(languages)
+			if "zh" in language:
+				language = "zh"
+			if "pt" in language:
+				language = "pt"
 
 			subtitles = element.get('subtitleLanguages', '<unknown>')
 			subtitles = ", ".join(subtitles)
@@ -79,7 +82,7 @@ def load_coursera_courses():
 			source = "Coursera"
 
 			course = Course(title=title, course_type=course_type, description=description, url=url,
-			languages=languages, subtitles=subtitles, workload=workload, 
+			language=language, subtitles=subtitles, workload=workload, 
 			has_certificates=has_certificates, category=category, subcategory=subcategory,
 			picture=picture, source=source)
 

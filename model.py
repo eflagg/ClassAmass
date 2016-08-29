@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+import dictalchemy
 
 db = SQLAlchemy()
 
@@ -15,7 +16,8 @@ class Course(db.Model):
 	course_type = db.Column(db.String, default="self")
 	source = db.Column(db.String, nullable=False)
 	description = db.Column(db.Text)
-	languages = db.Column(db.String(100))
+	headline = db.Column(db.String(5000))
+	language = db.Column(db.String(100))
 	subtitles = db.Column(db.String(100))
 	workload = db.Column(db.String(200))
 	has_certificates = db.Column(db.Boolean, default=False)
@@ -63,13 +65,18 @@ class User(db.Model):
 	fname = db.Column(db.String(20), nullable=False)
 	lname = db.Column(db.String(20), nullable=False)
 	email = db.Column(db.String(30), nullable=False, unique=True)
-	password = db.Column(db.String(20), nullable=False)
+	password = db.Column(db.Text, nullable=False)
+
+	courses_favorited = db.relationship('Course_Favorited', backref='users')
+	courses_taken = db.relationship('Course_Taken', backref='users')
+	courses_taking = db.relationship('Course_Taking', backref='users')
+	ratings = db.relationship('Rating', backref='users')
 
 	def __repr__(self):
 		return "<User id=%s, fname=%s, lname=%s>" % (self.user_id, self.fname, self.lname)
 
 
-class Courses_Favorited(db.Model):
+class Course_Favorited(db.Model):
 	"""Table for Courses favotited by Users."""
 
 	__tablename__ = "courses_favorited"
@@ -82,7 +89,7 @@ class Courses_Favorited(db.Model):
 		return "<Favorite user_id=%s, course_id=%s>" % (self.user_id, self.course_id)
 
 
-class Courses_Taken(db.Model):
+class Course_Taken(db.Model):
 	"""Table for Courses taken by Users."""
 
 	__tablename__ = "courses_taken"
@@ -95,7 +102,7 @@ class Courses_Taken(db.Model):
 		return "<Taken user_id=%s, course_id=%s>" % (self.user_id, self.course_id)
 
 
-class Courses_Taking(db.Model):
+class Course_Taking(db.Model):
 	"""Table for Courses currently being taken by Users."""
 
 	__tablename__ = "courses_taking"
@@ -108,7 +115,7 @@ class Courses_Taking(db.Model):
 		return "<Taking user_id=%s, course_id=%s>" % (self.user_id, self.course_id)
 
 
-class Ratings(db.Model):
+class Rating(db.Model):
 	"""Table for Ratings of Courses made by Users."""
 
 	__tablename__ = "courses_ratings"
@@ -120,6 +127,16 @@ class Ratings(db.Model):
 
 	def __repr__(self):
 		return "<user_id=%s, course_id=%s, rating=%s>" % (self.user_id, self.course_id, self.rating)
+
+
+dictalchemy.utils.make_class_dictable(Course)
+dictalchemy.utils.make_class_dictable(Partner)
+dictalchemy.utils.make_class_dictable(CoursePartner)
+dictalchemy.utils.make_class_dictable(User)
+dictalchemy.utils.make_class_dictable(Course_Favorited)
+dictalchemy.utils.make_class_dictable(Course_Taken)
+dictalchemy.utils.make_class_dictable(Course_Taking)
+dictalchemy.utils.make_class_dictable(Rating)
 
 
 def init_app():

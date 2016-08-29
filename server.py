@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request, session, jsonify, flash, redirect, url_for
-from model import connect_to_db, db, Course, CoursePartner, Partner, User, Courses_Favorited, Courses_Taken
+from model import connect_to_db, db, Course, CoursePartner, Partner, User, Course_Favorited, Course_Taken
 from flask_debugtoolbar import DebugToolbarExtension
 import hashlib
 from sqlalchemy import func
+import dictalchemy
 
 app = Flask(__name__)
 
@@ -62,7 +63,10 @@ def show_search_results():
     except UnicodeEncodeError:
         pass
 
-    return render_template("search.html", courses=relevent_courses, phrase=phrase, langs=lang_dict)
+    return render_template("search.html", 
+                            courses=relevent_courses, 
+                            phrase=phrase, 
+                            langs=lang_dict)
 
 
 # @app.context_processor
@@ -242,7 +246,8 @@ def process_registeration():
     session["current_user"] = user.email
     flash("You have successfully created an account. Welcome!")
 
-    return render_template("user_profile.html", user=user)
+    return render_template("user_profile.html", 
+                            user=user)
 
 
 @app.route("/login")
@@ -291,10 +296,13 @@ def show_user_page():
     email = session.get("current_user")
     if email:
         user = User.query.filter_by(email=email).first()
-        fav_courses = db.session.query(User.user_id,Course.title,Course.url,Course.picture,Course.course_id).join(Courses_Favorited).join(Course).filter(User.user_id==user.user_id).all()
-        taken_courses = db.session.query(User.user_id,Course.title,Course.url,Course.picture,Course.course_id).join(Courses_Taken).join(Course).filter(User.user_id==user.user_id).all()
+        fav_courses = db.session.query(User.user_id,Course.title,Course.url,Course.picture,Course.course_id).join(Course_Favorited).join(Course).filter(User.user_id==user.user_id).all()
+        taken_courses = db.session.query(User.user_id,Course.title,Course.url,Course.picture,Course.course_id).join(Course_Taken).join(Course).filter(User.user_id==user.user_id).all()
 
-        return render_template("user_profile.html", user=user, fav_courses=fav_courses, taken_courses=taken_courses)
+        return render_template("user_profile.html", 
+                                user=user, 
+                                fav_courses=fav_courses, 
+                                taken_courses=taken_courses)
     if not email:
         flash("You must be logged in to see your profile page.")
         return redirect("/")
@@ -308,10 +316,10 @@ def favorite_course():
     if email: 
         course_id = request.form.get("id")
         user = User.query.filter_by(email=email).one()
-        check_fav_courses = Courses_Favorited.query.filter_by(user_id=user.user_id, course_id=course_id).first()
-        check_taken_courses = Courses_Taken.query.filter_by(user_id=user.user_id, course_id=course_id).first()
+        check_fav_courses = Course_Favorited.query.filter_by(user_id=user.user_id, course_id=course_id).first()
+        check_taken_courses = Course_Taken.query.filter_by(user_id=user.user_id, course_id=course_id).first()
         if (not check_fav_courses) and (not check_taken_courses):
-            favorite_course = Courses_Favorited(user_id=user.user_id, course_id=course_id)
+            favorite_course = Course_Favorited(user_id=user.user_id, course_id=course_id)
             db.session.add(favorite_course)
             db.session.commit()
             alert = "You have successfully added this course to your favorites list!"
@@ -333,7 +341,7 @@ def unfavorite_course():
     course_id = request.form.get("id")
     email = session.get("current_user")
     user = User.query.filter_by(email=email).one()
-    course = Courses_Favorited.query.filter_by(user_id=user.user_id, course_id=course_id).first()
+    course = Course_Favorited.query.filter_by(user_id=user.user_id, course_id=course_id).first()
     db.session.delete(course)
     db.session.commit()
 
@@ -348,10 +356,10 @@ def add_course_taken():
     if email: 
         course_id = request.form.get("id")
         user = User.query.filter_by(email=email).one()
-        check_taken_courses = Courses_Taken.query.filter_by(user_id=user.user_id, course_id=course_id).first()
-        check_fav_courses = Courses_Favorited.query.filter_by(user_id=user.user_id, course_id=course_id).first()
+        check_taken_courses = Course_Taken.query.filter_by(user_id=user.user_id, course_id=course_id).first()
+        check_fav_courses = Course_Favorited.query.filter_by(user_id=user.user_id, course_id=course_id).first()
         if (not check_taken_courses) and (not check_fav_courses):
-            taken_course = Courses_Taken(user_id=user.user_id, course_id=course_id)
+            taken_course = Course_Taken(user_id=user.user_id, course_id=course_id)
             db.session.add(taken_course)
             db.session.commit()
             alert = "You have successfully added this course to your taken courses list!"
@@ -373,9 +381,9 @@ def move_course_from_fav_to_taken_list():
     course_id = request.form.get("id")
     email = session.get("current_user")
     user = User.query.filter_by(email=email).one()
-    fav_course = Courses_Favorited.query.filter_by(user_id=user.user_id, course_id=course_id).first()
+    fav_course = Course_Favorited.query.filter_by(user_id=user.user_id, course_id=course_id).first()
     db.session.delete(fav_course)
-    taken_course = Courses_Taken(user_id=user.user_id, course_id=course_id)
+    taken_course = Course_Taken(user_id=user.user_id, course_id=course_id)
     db.session.add(taken_course)
     db.session.commit()
 
@@ -389,7 +397,7 @@ def remove_taken_course():
     course_id = request.form.get("id")
     email = session.get("current_user")
     user = User.query.filter_by(email=email).one()
-    course = Courses_Taken.query.filter_by(user_id=user.user_id, course_id=course_id).first()
+    course = Course_Taken.query.filter_by(user_id=user.user_id, course_id=course_id).first()
     db.session.delete(course)
     db.session.commit()
 
