@@ -139,6 +139,35 @@ dictalchemy.utils.make_class_dictable(Course_Taking)
 dictalchemy.utils.make_class_dictable(Rating)
 
 
+def example_data():
+	"""Fake sample data to test database queries."""
+
+	bio_course = Course(course_id=1, title="Advanced Biology", course_type="self",
+					 description="A course about advanced biology topics", 
+					 url="www.course.com", language="en", 
+					 subtitles=["fr", "zh"], workload="10 weeks, 2hr/week", 
+					has_certificates=True, category="science", 
+					subcategory="biology", picture="www.picture.com", 
+					source="Coursera")
+	art_hist_course = Course(course_id=2, title="Intro to Art History", course_type="instructor",
+					 description="A course about European art history", 
+					 url="www.course2.com", language="fr", 
+					 subtitles=["en", "zh"], workload="52 lectures", 
+					has_certificates=False, category="history", 
+					subcategory="art history", picture="www.picture2.com", 
+					source="Udemy")
+
+	user = User(user_id="1", fname="Jane", lname="Doe", 
+				email="jane@email.com",	password="pass")
+
+	course_favorited = Course_Favorited(id="1", user_id="1", course_id="1")
+
+	course_taken = Course_Favorited(id="1", user_id="1", course_id="2")
+
+	db.session.add_all([bio_course, art_hist_course, user, course_favorited, course_taken])
+	db.session.commit()
+
+
 def init_app():
     from flask import Flask
     app = Flask(__name__)
@@ -147,10 +176,10 @@ def init_app():
     print "Connected to DB."
 
 
-def connect_to_db(app):
+def connect_to_db(app, db_uri='postgres:///courses'):
     """Connect the database to Flask app."""
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres:///courses'
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_ECHO'] = True
     db.app = app
     db.init_app(app)

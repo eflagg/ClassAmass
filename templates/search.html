@@ -35,8 +35,8 @@
 				Japanese (<span id="ja">{{ langs["ja"] }}</span>)
 			</input><br>
 			<span id="extra-langs">
-			<input type="checkbox" id="chinese" name="languages" value="zh-CN">
-				Chinese (simplified) (<span id="zh-CN">{{ langs["zh-CN"] }}</span>)
+			<input type="checkbox" name="languages" value="zh">
+				Chinese (<span id="zh">{{ langs["zh"] }}</span>)
 			</input><br>
 			<input type="checkbox" name="languages" value="fr">
 				French (<span id="fr">{{ langs["fr"] }}</span>)
@@ -67,9 +67,6 @@
 			</input><br>
 			<input type="checkbox" name="languages" value="he">
 				Hebrew (<span id="he">{{ langs["he"] }}</span>)
-			</input><br>
-			<input type="checkbox" name="languages" value="zh-TW">
-				Chinese (traditional) (<span id="zh-TW">{{ langs["zh-TW"] }}</span>)
 			</input><br>
 			<input type="checkbox" name="languages" value="ur">
 				Urdu (<span id="ur">{{ langs["ur"] }}</span>)
@@ -635,10 +632,9 @@
 				Your search for <strong>{{ phrase }}</strong> has yielded <strong>{{ courses|length }}</strong> results: </h3>
 			{% for course in courses %}
 			<div class="media well">
+			<a href="{{ course.url }}" target="_blank">
   				<div class="media-left media-middle">
-    				<a href="{{ course.url }}">
       				<img class="media-object" src="{{ course.picture }}" alt="course pic">
-    				</a>
   				</div>
   			<div class="media-body">
     			<h4 class="media-heading">{{ course.title }}</h4>
@@ -655,6 +651,7 @@
      			<button type="button" id="{{ course.course_id}}" class="btn btn-danger favorite-button btn-xs">Favorite</button>
      			<button type="button" id="{{ course.course_id}}" class="btn btn-success taken-button btn-xs">Taken</button>
   			</div>
+  			</a>
 			</div>
 			{% endfor %}
 		</div>
