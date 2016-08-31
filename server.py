@@ -266,7 +266,7 @@ def favorite_course():
             db.session.commit()
             alert = "You have successfully added this course to your \
                     favorites list!"
-        elif (is_taken_course) and (not is_already_fav_course):
+        elif (is_taken_course) and (not is_fav_course):
             alert = "You've already taken this course!"
         else:
             alert = "You have already added this course to your \

@@ -4,7 +4,7 @@ $("#extra-unis").hide()
 var favorite = function() {
 	$(".favorite-button").on("click", function(evt) {
 		$.post("/favorite", {'id': this.id}, function (data) {
-			alert(data.alert);
+			$("#favorite-taken-message").html(data.alert);
 		});
 	});
 }
@@ -12,13 +12,14 @@ var favorite = function() {
 var taken = function() {
 	$(".taken-button").on("click", function(evt) {
 		$.post("/taken", {'id': this.id}, function (data) {
-			alert(data.alert);
+			$("#favorite-taken-message").html(data.alert);
 		});
 	});
 }
 
 var lang_toggle = function() {
 	$("#show-lang").on("click", function() {
+		console.log('clicked');
 		$("#extra-langs").toggle();
 		if ($("#show-lang").html() !== "Show More") { 
 			$("#show-lang").html("Show More");
@@ -62,12 +63,10 @@ $("#filters").on('click', function(evt) {
 				$("#" + l).html(results["lang_counts"][l]);
 			};
 			favorite();
-			taken();	
+			taken();
 		} else if ($.isEmptyObject(course_dict) == true) {
 			$("#main-search-div").append("<p>Sorry, we couldn't find any courses that matched your description! Please adjust your filters or <a href=\"/\">try another search.</a></p>");
 		};
-		lang_toggle();
-		uni_toggle();
 	});
 });
 

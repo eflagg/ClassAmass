@@ -632,11 +632,11 @@
 				Your search for <strong>{{ phrase }}</strong> has yielded <strong>{{ courses|length }}</strong> results: </h3>
 			{% for course in courses %}
 			<div class="media well">
-			<a href="{{ course.url }}" target="_blank">
   				<div class="media-left media-middle">
       				<img class="media-object" src="{{ course.picture }}" alt="course pic">
   				</div>
   			<div class="media-body">
+  				<a href="{{ course.url }}" target="_blank">
     			<h4 class="media-heading">{{ course.title }}</h4>
     			<p>{{ course.description[:350] }}</p>
      			{% if course.workload %}
@@ -647,11 +647,10 @@
      				${{ course.price }}
      			{% else%}
      				Free
-     			{% endif %}</p>
+     			{% endif %}</p></a>
      			<button type="button" id="{{ course.course_id}}" class="btn btn-danger favorite-button btn-xs">Favorite</button>
-     			<button type="button" id="{{ course.course_id}}" class="btn btn-success taken-button btn-xs">Taken</button>
+     			<button type="button" id="{{ course.course_id}}" class="btn btn-success taken-button btn-xs">Taken</button><div id="favorite-taken-message"></div>
   			</div>
-  			</a>
 			</div>
 			{% endfor %}
 		</div>
