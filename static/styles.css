@@ -109,25 +109,35 @@ input {
 /*li + input {
 	font-size: 12px;
 }*/
-a {
+#course-url {
 	color: inherit;
 	text-decoration: none;
 }
 
-a:hover 
+#course-url:hover 
 {
      color: inherit; 
      text-decoration: none; 
 }
 
-a:visited 
+#course-url:visited 
 {
      color: inherit; 
      text-decoration: none; 
 }
 
-a:active 
+#course-url:active 
 {
      color: inherit; 
      text-decoration: none; 
+}
+
+#login-div {
+	text-align: center;
+	margin-top: 100px;
+}
+
+#register-div {
+	text-align: center;
+	margin-top: 100px;
 }

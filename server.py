@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, session, jsonify, flash, redirect, url_for
-from model import connect_to_db, db, Course, CoursePartner, Partner, User, Course_Favorited, Course_Taken
+from model import connect_to_db, db, Course, CoursePartner, Partner, User, Course_Favorited, Course_Taken, Course_Taking
 from flask_debugtoolbar import DebugToolbarExtension
 import hashlib
 from sqlalchemy import func
@@ -167,7 +167,9 @@ def process_registeration():
 
     if is_already_user:
         flash("You already have an account. Please log in here.")
+        # alert = "You already have an account. Please log in."
         return redirect("/login")
+        # return jsonify({"alert": alert})
 
     if not is_already_user:
         user = User(fname=fname, lname=lname, email=email, password=password)
@@ -237,43 +239,96 @@ def show_user_page():
                                         Course.picture,Course.course_id).join(
                                         Course_Taken).join(Course).filter(
                                         User.user_id==user.user_id).all()
+        enrolled_courses = db.session.query(User.user_id,Course.title,Course.url,
+                                        Course.picture,Course.course_id).join(
+                                        Course_Taking).join(Course).filter(
+                                        User.user_id==user.user_id).all()
 
         return render_template("user_profile.html", 
                                 user=user, 
                                 fav_courses=fav_courses, 
-                                taken_courses=taken_courses)
+                                taken_courses=taken_courses,
+                                enrolled_courses=enrolled_courses)
     if not email:
         flash("You must be logged in to see your profile page.")
         return redirect("/")
 
 
-@app.route("/favorite", methods=["POST"])
+def is_user():
+    """Returns email if user logged into session. Otherwise, returns false."""
+
+    return session.get("current_user")
+
+
+def is_favorited(user, course_id):
+    """Query that returns true if course is alreay favorited."""
+
+    if Course_Favorited.query.filter_by(
+                            user_id=user.user_id, course_id=course_id).first():
+        return True
+
+    return False
+
+
+def is_taken(user, course_id):
+    """Query that returns true if course is alreay in taken list."""
+
+    if Course_Taken.query.filter_by(
+                            user_id=user.user_id, course_id=course_id).first():
+        return True
+
+    return False
+
+
+def is_enrolled(user, course_id):
+    """Query that returns true if course is alreay in enrolled list."""
+
+    if Course_Taking.query.filter_by(
+                            user_id=user.user_id, course_id=course_id).first():
+        return True
+
+    return False
+
+
+@app.route("/bookmark", methods=["POST"])
 def favorite_course():
     """Add favorited course of user to courses_favorited table."""
 
-    email = session.get("current_user")
-    if email: 
-        course_id = request.form.get("id")
+    if is_user(): 
+        email = session.get("current_user")
         user = User.query.filter_by(email=email).one()
-        is_fav_course = Course_Favorited.query.filter_by(
-                            user_id=user.user_id, course_id=course_id).first()
-        is_taken_course = Course_Taken.query.filter_by(
-                            user_id=user.user_id, course_id=course_id).first()
-        if (not is_fav_course) and (not is_taken_course):
-            favorite_course = Course_Favorited(user_id=user.user_id, 
-                                                course_id=course_id)
-            db.session.add(favorite_course)
-            db.session.commit()
-            alert = "You have successfully added this course to your \
-                    favorites list!"
-        elif (is_taken_course) and (not is_fav_course):
-            alert = "You've already taken this course!"
-        else:
+        course_id = request.form.get("id")
+
+        if is_favorited(user, course_id):
             alert = "You have already added this course to your \
                     favorites list!"
-    if not email:
-        alert = "You must be signed in to favorite a course!"
-        
+
+        elif is_taken(user, course_id):
+            alert = "You have already added this course to your \
+                    courses taken list!"
+
+        elif is_enrolled(user, course_id):
+            alert = "You are currently enrolled in this course!"
+
+        else:
+            action = request.form.get("action")
+            if action == "favorite":
+                new_course = Course_Favorited(user_id=user.user_id, 
+                                                course_id=course_id)
+                alert = "You have successfully added this course to your favorites!"
+            elif action == "enrolled":
+                new_course = Course_Taking(user_id=user.user_id, 
+                                                course_id=course_id)
+                alert = "You have successfully added this course to your enrolled courses list!"
+            elif action == "taken":
+                new_course = Course_Taken(user_id=user.user_id, 
+                                                course_id=course_id)
+                alert = "You have successfully added this course to your taken courses list!"
+            db.session.add(new_course)
+            db.session.commit()
+    else:
+        alert = "You must be signed in to add this course."
+
     return jsonify({'alert': alert})
 
 
@@ -289,40 +344,10 @@ def unfavorite_course():
     db.session.delete(course)
     db.session.commit()
 
-    return jsonify()
+    num_courses = db.session.query(func.count("*")).select_from(Course_Favorited
+                                    ).filter_by(user_id=user.user_id).one()
 
-
-@app.route("/taken", methods=["POST"])
-def add_course_taken():
-    """Add course for user to courses_taken table."""
-
-    email = session.get("current_user")
-    if email: 
-        course_id = request.form.get("id")
-        user = User.query.filter_by(email=email).one()
-        is_taken_course = Course_Taken.query.filter_by(
-                                user_id=user.user_id, 
-                                course_id=course_id).first()
-        is_fav_course = Course_Favorited.query.filter_by(
-                                user_id=user.user_id, 
-                                course_id=course_id).first()
-        if (not is_taken_course) and (not is_fav_course):
-            taken_course = Course_Taken(user_id=user.user_id, 
-                                        course_id=course_id)
-            db.session.add(taken_course)
-            db.session.commit()
-            alert = "You have successfully added this course to your taken \
-                    courses list!"
-        elif (is_fav_course) and (not is_taken_course):
-            alert = "This course is in your favorites list!"
-        else:
-            alert = "You have already added this course to your taken \
-                    courses list!"
-    if not email:
-        alert = "You must be signed in to add a course to you taken courses \
-                list!"
-        
-    return jsonify({'alert': alert})
+    return jsonify({"course_no": num_courses})
 
 
 @app.route("/move_to_taken", methods=["POST"])
@@ -341,7 +366,10 @@ def move_course_from_fav_to_taken_list():
     db.session.add(taken_course)
     db.session.commit()
 
-    return jsonify()
+    num_courses = db.session.query(func.count("*")).select_from(Course_Favorited
+                                    ).filter_by(user_id=user.user_id).one()
+
+    return jsonify({"course_no": num_courses})
 
 
 @app.route("/remove_from_taken", methods=["POST"])
@@ -356,7 +384,10 @@ def remove_taken_course():
     db.session.delete(course)
     db.session.commit()
 
-    return jsonify()
+    num_courses = db.session.query(func.count("*")).select_from(Course_Taken
+                                    ).filter_by(user_id=user.user_id).one()
+
+    return jsonify({"course_no": num_courses})
 
 
 if __name__ == "__main__":

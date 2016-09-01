@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
 {% block title %}Register for Emily's Online Courses{% endblock %}
 {% block content %}
-	<div>
-	<form action="/register" method="POST">
+	<div id="register-div">
+	<form action="/register" id="rgstr-form" method="POST">
 		<h3>Sign up now!</h3>
 		First Name: <input type="text" name="fname" required></input><br>
 		Last Name: <input type="text" name="lname" required></input><br>
 		email address: <input type="text" name="email" required></input><br>
 		password: <input type="password" name="password" required></input><br>
-		<input type="submit" value="Sign up">
+		<input id="rgstr-btn" type="submit" value="Sign up">
 	</form>
+	<span id="register-msg"></span>
 	</div>
 {% endblock %}

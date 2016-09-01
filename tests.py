@@ -20,7 +20,7 @@ class FlaskTests(unittest.TestCase):
 		self.assertIn("<h1>What do you want to learn about?</h1>", result.data)
 
 
-	def test_registry_form(self):
+	def test_register_form(self):
 		"""Test for registration page."""
 
 		client = app.test_client()
