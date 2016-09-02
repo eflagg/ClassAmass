@@ -162,7 +162,7 @@ def example_data():
 
 	course_favorited = Course_Favorited(id="1", user_id="1", course_id="1")
 
-	course_taken = Course_Favorited(id="1", user_id="1", course_id="2")
+	course_taken = Course_Taken(id="1", user_id="1", course_id="2")
 
 	db.session.add_all([bio_course, art_hist_course, user, course_favorited, course_taken])
 	db.session.commit()
@@ -180,7 +180,7 @@ def connect_to_db(app, db_uri='postgres:///courses'):
     """Connect the database to Flask app."""
 
     app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
-    app.config['SQLALCHEMY_ECHO'] = True
+    # app.config['SQLALCHEMY_ECHO'] = True
     db.app = app
     db.init_app(app)
 

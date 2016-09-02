@@ -638,7 +638,11 @@
   			<div class="media-body">
   				<a href="{{ course.url }}" id="course-url" target="_blank">
     			<h4 class="media-heading">{{ course.title }}</h4>
+    			{% if course.source == "Coursera" %}
     			<p>{{ course.description[:350] }}</p>
+    			{% else %}
+    			<p>{{ course.headline }}</p>
+    			{% endif %}
      			{% if course.workload %}
      				<p>Workload: {{ course.workload }}<br>
      			{% endif %}

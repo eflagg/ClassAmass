@@ -2,11 +2,32 @@
 {% block title %}{{ user.fname }}'s Profile Page{% endblock %}
 {% block content %}
 	<div class="profile-div">
-		<h3 class="welcome-note">Hi {{ user.fname }}! Welcome to Emily's Online Courses!
+		<h3 class="welcome-note">Hi {{ user.fname }}! Welcome to ClassAmass!
 			<a href="/">Start searching for classes</a>
 		</h3>
+		{% if enrolled_courses %}
+		<div id="enrolled">
+			<h3 id="enrolled-heading" class="class-heading">Currently Enrolled:</h3><br>
+			{% for course in enrolled_courses %}
+			<div id="{{ course.course_id }}">
+				<div id ="coursediv-{{ course.course_id }}" class="media well profile">
+					<div class="media-left media-middle">
+						<a href="{{ course.url }}">
+	      					<img class="media-object" src="{{ course.picture }}" alt="course pic">
+	    				</a>
+	  				</div>
+	  				<div class="media-body">
+	    				<h4 class="media-heading">{{ course.title }}</h4>
+						<button type="button" class="btn btn-danger btn-xs unenroll" data-course-id="{{ course.course_id }}">Remove</button>
+						<button type="button" class="btn btn-danger btn-xs move-to-completed-course" data-course-id="{{ course.course_id }}">Finished</button>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+		</div>		
+	{% endif %}
 	{% if fav_courses %}		
-		<h3 id="fav-heading" class="class-heading">Classes you'd like to take:</h3><br>
+		<h3 id="fav-heading" class="class-heading">Favorites:</h3><br>
 		{% for course in fav_courses %}
 		<div id="{{ course.course_id }}" class="course-div">
 			<div id ="course-{{ course.course_id }}" class="media well profile">
@@ -27,7 +48,7 @@
 	<span id="unfav-msg"></span>
 	{% if taken_courses %}
 		<div id="taken">
-			<h3 id="taken-heading" class="class-heading">Classes you have taken:</h3><br>
+			<h3 id="taken-heading" class="class-heading">Completed:</h3><br>
 			{% for course in taken_courses %}
 			<div id="{{ course.course_id }}">
 				<div id ="coursediv-{{ course.course_id }}" class="media well profile">
@@ -46,27 +67,6 @@
 		</div>		
 	{% endif %}
 	<span id="untaken-msg"></span>
-		{% if enrolled_courses %}
-		<div id="enrolled">
-			<h3 id="enrolled-heading" class="class-heading">Classes you are enrolled in:</h3><br>
-			{% for course in enrolled_courses %}
-			<div id="{{ course.course_id }}">
-				<div id ="coursediv-{{ course.course_id }}" class="media well profile">
-					<div class="media-left media-middle">
-						<a href="{{ course.url }}">
-	      					<img class="media-object" src="{{ course.picture }}" alt="course pic">
-	    				</a>
-	  				</div>
-	  				<div class="media-body">
-	    				<h4 class="media-heading">{{ course.title }}</h4>
-						<button type="button" class="btn btn-danger btn-xs unenroll" data-course-id="{{ course.course_id }}">Remove</button>
-						<button type="button" class="btn btn-danger btn-xs move-to-completed-course" data-course-id="{{ course.course_id }}">Finished</button>
-					</div>
-				</div>
-			</div>
-			{% endfor %}
-		</div>		
-	{% endif %}
 	</div>
 	<script src="/static/unfavorite.js"></script>
 {% endblock %}

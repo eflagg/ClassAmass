@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session, jsonify, flash, redirect, url_for
 from model import connect_to_db, db, Course, CoursePartner, Partner, User, Course_Favorited, Course_Taken, Course_Taking
 from flask_debugtoolbar import DebugToolbarExtension
+from helpers import get_user_by_email, get_user_by_session, is_favorited, is_taken, is_enrolled
 import hashlib
 from sqlalchemy import func
 import dictalchemy
@@ -43,6 +44,12 @@ def get_language_count(phrase, *args):
         lang_counts[lang] = count
 
     return lang_counts
+
+
+def is_user():
+    """Returns email if user logged into session. Otherwise, returns false."""
+
+    return session.get("current_user")
 
 
 @app.route("/search")
@@ -163,15 +170,13 @@ def process_registeration():
     password = request.form.get("password")
     password = hashlib.sha224(password).hexdigest()
 
-    is_already_user = User.query.filter_by(email=email).first()
-
-    if is_already_user:
+    if get_user_by_email(email):
         flash("You already have an account. Please log in here.")
         # alert = "You already have an account. Please log in."
         return redirect("/login")
         # return jsonify({"alert": alert})
 
-    if not is_already_user:
+    else:
         user = User(fname=fname, lname=lname, email=email, password=password)
         db.session.add(user)
         db.session.commit()
@@ -200,8 +205,8 @@ def process_login():
     password = request.form.get("password")
     password = hashlib.sha224(password).hexdigest()
 
-    user = User.query.filter_by(email=email).first()
-    if user != None:
+    user = get_user_by_email(email)
+    if user:
         if user.password == password:
             session["current_user"] = user.email
             flash("You have successfully logged in.")
@@ -229,8 +234,11 @@ def show_user_page():
     """Show user profile page."""
 
     email = session.get("current_user")
+
+    print '$$$', email
+
     if email:
-        user = User.query.filter_by(email=email).first()
+        user = get_user_by_email(email)
         fav_courses = db.session.query(User.user_id,Course.title,Course.url,
                                         Course.picture,Course.course_id).join(
                                         Course_Favorited).join(Course).filter(
@@ -254,59 +262,21 @@ def show_user_page():
         return redirect("/")
 
 
-def is_user():
-    """Returns email if user logged into session. Otherwise, returns false."""
-
-    return session.get("current_user")
-
-
-def is_favorited(user, course_id):
-    """Query that returns true if course is alreay favorited."""
-
-    if Course_Favorited.query.filter_by(
-                            user_id=user.user_id, course_id=course_id).first():
-        return True
-
-    return False
-
-
-def is_taken(user, course_id):
-    """Query that returns true if course is alreay in taken list."""
-
-    if Course_Taken.query.filter_by(
-                            user_id=user.user_id, course_id=course_id).first():
-        return True
-
-    return False
-
-
-def is_enrolled(user, course_id):
-    """Query that returns true if course is alreay in enrolled list."""
-
-    if Course_Taking.query.filter_by(
-                            user_id=user.user_id, course_id=course_id).first():
-        return True
-
-    return False
-
-
 @app.route("/bookmark", methods=["POST"])
 def favorite_course():
     """Add favorited course of user to courses_favorited table."""
 
     if is_user(): 
         email = session.get("current_user")
-        user = User.query.filter_by(email=email).one()
+        user = get_user_by_email(email)
         course_id = request.form.get("id")
 
         if is_favorited(user, course_id):
             alert = "You have already added this course to your \
                     favorites list!"
-
         elif is_taken(user, course_id):
             alert = "You have already added this course to your \
                     courses taken list!"
-
         elif is_enrolled(user, course_id):
             alert = "You are currently enrolled in this course!"
 
@@ -338,7 +308,7 @@ def unfavorite_course():
 
     course_id = request.form.get("id")
     email = session.get("current_user")
-    user = User.query.filter_by(email=email).one()
+    user = get_user_by_email(email)
     course = Course_Favorited.query.filter_by(user_id=user.user_id, 
                                                 course_id=course_id).first()
     db.session.delete(course)
@@ -358,7 +328,7 @@ def move_course_from_fav_to_taken_list():
 
     course_id = request.form.get("id")
     email = session.get("current_user")
-    user = User.query.filter_by(email=email).one()
+    user = get_user_by_email(email)
     fav_course = Course_Favorited.query.filter_by(user_id=user.user_id, 
                                                 course_id=course_id).first()
     db.session.delete(fav_course)
@@ -378,7 +348,7 @@ def remove_taken_course():
 
     course_id = request.form.get("id")
     email = session.get("current_user")
-    user = User.query.filter_by(email=email).one()
+    user = get_user_by_email(email)
     course = Course_Taken.query.filter_by(user_id=user.user_id, 
                                             course_id=course_id).first()
     db.session.delete(course)

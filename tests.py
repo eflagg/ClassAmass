@@ -1,6 +1,7 @@
 from server import app, get_language_count
 import unittest
 from model import db, connect_to_db, Course, example_data
+from helpers import get_user_by_email
 
 class FlaskTests(unittest.TestCase):
 
@@ -42,16 +43,41 @@ class FlaskDBTests(unittest.TestCase):
 	"""Tests querying and changing database."""
 
 	def setUp(self):
-		"""Set up by creating fake client."""
+		"""Set up by creating testdb and fake client."""
 
 		self.client = app.test_client()
 		app.config['TESTING'] = True
 		app.config['SECRET_KEY'] = 'key'
 		connect_to_db(app, "postgresql:///testdb")
 
+		with self.client as c:
+			with c.session_transaction() as sess:
+				sess['current_user'] = "jane@email.com"
+
 		db.create_all()
 		example_data()
 
+	def tearDown(self):
+		"""Tear down by droping testdb."""
+
+		db.session.close()
+		db.drop_all()
+
+
+	def test_login(self):
+		"""Test query to db to get user from input of email."""
+
+		result = self.client.get("/profile", follow_redirects=True)
+		self.assertIn("Jane", result.data)
+
+	def test_user_by_email(self):
+
+		jane = get_user_by_email("jane@email.com")
+
+		assert jane.lname == "Doe"
+
+
+		# assert get_user_by_email("jane@email.com"). "<User id=1, fname=Jane, lname=Doe>"
 
 
 	# def test_logout(self):
