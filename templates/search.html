@@ -6,19 +6,23 @@
     <div id="form-div">
 	<form action='/search/filters/fake' id="filters-form">
 		<li class="side-nav-category">
-			Search: 
-			<input type="text" id="search-phrase" class="side-nav-input-text" name="search-phrase" value={{ phrase }}>
+			<span class="filter-cat">Search</span> 
+			<input type="text" id="search-phrase" class="side-nav-input-text text form-control" name="search-phrase" value="{{ phrase }}">
 			</input>
 		</li>
 		<li class="divider"></li><br>
 		<li class="side-nav-category">
-			Max Price: 
-			<input type="number" id="price" class="side-nav-input-text" name="price" id="price-field">
-			</input>
+			<span class="filter-cat">Max Price</span>
+			<div class="input-group">
+				<span class="input-group-addon">$</span>
+				<input type="number" id="price" step="5" min="0" class="side-nav-input-text form-control" placeholder="price">
+			</div>
+<!-- 			<input type="number" id="price" class="side-nav-input-text" name="price" step="5" id="price-field">
+			</input> -->
 		</li>
 		<li class="divider"></li><br>
 		<li id="languages-side-nav" class="side-nav-category">
-			Languages:<br>
+			<span class="filter-cat">Languages</span><br>
 			<input type="checkbox" name="languages" value="en" >
 				English (<span id="en">{{ langs["en"] }}</span>)
 			</input><br>
@@ -148,7 +152,7 @@
 		</li>
 		<li class="divider"></li><br>
 		<li class="side-nav-category">
-			Instructor or Self led:<br>
+			<span class="filter-cat">Instructor or Self led</span><br>
 			<input type="radio" name="coursetype" value="self">
 				Self Led
 			</input><br>
@@ -158,7 +162,7 @@
 		</li>
 		<li class="divider"></li><br>
 		<li class="side-nav-category">
-			Certificates:<br>
+			<span class="filter-cat">Certificates</span><br>
 			<input type="radio" name="certificates" value="yes">
 				Has Certificates
 			</input><br>
@@ -168,7 +172,7 @@
 		</li>
 		<li class="divider"></li><br>
 		<li class="side-nav-category">
-			Source:<br>
+			<span class="filter-cat">Source</span><br>
 			<input type="checkbox" name="source" value="Coursera">
 				Coursera
 			</input>
@@ -177,7 +181,7 @@
 			</input></li>
 		<li class="divider"></li><br>
 		<li class="side-nav-category">
-			Universities:<br>
+			<span class="filter-cat">Universities</span><br>
 			<input type="checkbox" name="university" value="6">
 				University of Pennsylvania
 			</input><br>

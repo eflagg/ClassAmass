@@ -1,4 +1,5 @@
 from model import User, Course, Course_Favorited, Course_Taken, Course_Taking
+from flask import session
 
 def get_user_by_email(email):
     """Return user based on email of current_user in session."""

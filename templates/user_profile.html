@@ -15,8 +15,8 @@
   </ul>
 </div> -->
 	<div class="profile-div">
-		<h3 class="welcome-note">Hi {{ user.fname }}! Welcome to ClassAmass!
-			<a href="/">Start searching for classes</a>
+		<h3 class="welcome-note">Hi {{ user.fname }}, welcome to ClassAmass!
+			<a href="/">Start searching for classes.</a>
 		</h3>
 		<button type="button" id="enrolled-heading" class="btn btn-primary class-heading btn-xl">Currently Enrolled</button><br><br>
 		{% if enrolled_courses %}
@@ -26,14 +26,14 @@
 			<div id="{{ course.course_id }}">
 				<div id ="coursediv-{{ course.course_id }}" class="media well profile">
 					<div class="media-left media-middle">
-						<a href="{{ course.url }}">
+						<a href="{{ course.url }}" target="_blank">
 	      					<img class="media-object" src="{{ course.picture }}" alt="course pic">
 	    				</a>
 	  				</div>
 	  				<div id="add-here-{{ course.course_id }}" class="media-body">
 	    				<h4 class="media-heading">{{ course.title }}</h4>
-						<button type="button" class="btn btn-danger btn-xs unenroll" data-course-id="{{ course.course_id }}">Remove</button>
-						<button type="button" class="btn btn-danger btn-xs completed-button" data-course-id="{{ course.course_id }}">Completed</button>
+	    				<button type="button" class="btn btn-info btn-xs completed-button" data-course-id="{{ course.course_id }}">Completed</button>
+						<button type="button" class="btn btn-info btn-xs unenroll" data-course-id="{{ course.course_id }}">Remove</button>
 					</div>
 				</div>
 			</div>
@@ -53,15 +53,15 @@
 		<div id="{{ course.course_id }}" class="course-div">
 			<div id ="course-{{ course.course_id }}" class="media well profile">
 				<div class="media-left media-middle">
-					<a href="{{ course.url }}">
+					<a href="{{ course.url }}" target="_blank">
       					<img class="media-object" src="{{ course.picture }}" alt="course pic">
     				</a>
   				</div>
   				<div id="add-here-{{ course.course_id }}" class="media-body">
     				<h4 class="media-heading">{{ course.title }}</h4>
-					<button type="button" class="btn btn-success btn-xs taken-button" data-course-id="{{ course.course_id }}">Completed</button>
-					<button type="button" class="btn btn-danger btn-xs enrolled-button" data-course-id="{{ course.course_id }}">Enrolled</button>
-					<button type="button" class="btn btn-danger btn-xs unfavorite-button" data-course-id="{{ course.course_id }}">Unfavorite</button>
+					<button type="button" class="btn btn-info btn-xs taken-button" data-course-id="{{ course.course_id }}">Completed</button>
+					<button type="button" class="btn btn-info btn-xs enrolled-button" data-course-id="{{ course.course_id }}">Enrolled</button>
+					<button type="button" class="btn btn-info btn-xs unfavorite-button" data-course-id="{{ course.course_id }}">Remove</button>
 				</div>
 			</div>
 		</div>
@@ -81,13 +81,13 @@
 			<div id="{{ course.course_id }}">
 				<div id ="coursediv-{{ course.course_id }}" class="media well profile">
 					<div class="media-left media-middle">
-						<a href="{{ course.url }}">
+						<a href="{{ course.url }}" target="_blank">
 	      					<img class="media-object" src="{{ course.picture }}" alt="course pic">
 	    				</a>
 	  				</div>
 	  				<div class="media-body">
 	    				<h4 class="media-heading">{{ course.title }}</h4>
-						<button type="button" class="btn btn-danger btn-xs remove-course" data-course-id="{{ course.course_id }}">Remove</button>
+						<button type="button" class="btn btn-info btn-xs remove-course" data-course-id="{{ course.course_id }}">Remove</button>
 					</div>
 				</div>
 			</div>

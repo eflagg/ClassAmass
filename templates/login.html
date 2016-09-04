@@ -1,12 +1,14 @@
 {% extends 'base.html' %}
-{% block title %}Login to Emily's Online Courses{% endblock %}
+{% block title %}Log In to ClassAmass{% endblock %}
 {% block content %}
-	<div id="login div">
-	<form action="/login" method="POST">
-		<h3>Log in!</h3>
-		email address: <input type="text" name="email" required></input><br>
-		password: <input type="password" name="password" required></input><br>
-		<input type="submit" value="Log in">
-	</form>
-	</div>
+<div class="container">
+    <form action="/login" method="POST" class="form-signin">
+        <h2 class="form-signin-heading">Please log in</h2>
+        <label for="email" class="sr-only">Email address</label>
+        	<input type="email" name="email" id="email" class="form-control" placeholder="Email address" required autofocus>
+        <label for="password" class="sr-only">Password</label>
+        	<input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+        <button id="login-submit" class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
+    </form>
+</div>
 {% endblock %}

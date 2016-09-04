@@ -27,11 +27,11 @@
       {% endif %}
     </ul>
   </div>
-  </nav><br><br><br><br>
+  </nav>
   {% with messages = get_flashed_messages() %}
 		{% if messages %}
 			{% for message in messages %}
-				{{ message }}<br>
+				<div class="alert alert-info flash-msg" role="alert">{{ message }}</div><br>
 			{% endfor %}
 		{% endif %}
 	{% endwith %}

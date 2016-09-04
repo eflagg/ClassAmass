@@ -12,7 +12,7 @@ $(document).ready(function() {
 				$("#unfav-msg").delay(2500).fadeOut();
 			});
 			if (data.course_no[0] === 0) {
-				$("#favorite").html("<h4>You have no favorite courses.</h4>");
+				$("#favorite").html("<h4 class=\"no-prof-courses-note\">You have no favorite courses.</h4>");
 			};
 		});
 	});
@@ -22,14 +22,14 @@ $(document).ready(function() {
 		$("#" + courseId).empty();
 		$("#taken").append(course_info);
 		$('*[data-course-id =' + courseId + ']').remove();
-		$("#add-here-" + courseId).append("<button type=\"button\" class=\"btn btn-danger btn-xs remove-course\" id=" + this.id + ">Remove</button><br><br>");
+		$("#add-here-" + courseId).append("<button type=\"button\" class=\"btn btn-info btn-xs remove-course\" id=" + this.id + ">Remove</button><br><br>");
 		$.post("/move_to_taken", {'id': courseId, 'origin': 'fav'}, function(data) {
 			$("#unfav-msg").html("You have moved this class to your taken courses list!");
 			$(function() {
 				$("#unfav-msg").delay(2500).fadeOut();
 			});
 			if (data.course_no[0] === 0) {
-				$("#favorite").html("<h4>You have no favorite courses.</h4>");
+				$("#favorite").html("<h4 class=\"no-prof-courses-note\">You have no favorite courses.</h4>");
 			};
 		});
 	});
@@ -43,14 +43,14 @@ $(document).ready(function() {
 		};
 		$("#enrolled").append(course_info);
 		$('*[data-course-id =' + courseId + ']').remove();
-		$("#add-here-" + courseId).append("<button type=\"button\" class=\"btn btn-danger btn-xs unenroll\" id=" + this.id + ">Remove</button> <button type=\"button\" class=\"btn btn-danger btn-xs completed-button\" id=" + this.id + ">Completed</button><br><br>");
+		$("#add-here-" + courseId).append("<button type=\"button\" class=\"btn btn-info btn-xs completed-button\" id=" + this.id + ">Completed</button> <button type=\"button\" class=\"btn btn-info btn-xs unenroll\" id=" + this.id + ">Remove</button><br><br>");
 		$.post("/move_to_enrolled", {'id': courseId}, function(data) {
 			$("#unfav-msg").html("You have moved this class to your currently enrolled list!");
 			$(function() {
 				$("#unfav-msg").delay(2500).fadeOut();
 			});
 			if (data.course_no[0] === 0) {
-				$("#favorite").html("<h4>You have no favorite courses.</h4>");
+				$("#favorite").html("<h4class=\"no-prof-courses-note\">You have no favorite courses.</h4>");
 			};
 		});
 	});
@@ -63,7 +63,7 @@ $(document).ready(function() {
 				$("#untaken-msg").delay(2500).fadeOut();
 			});
 			if (data.course_no[0] === 0) {
-				$("#taken").html("<h4>You have not completed any courses.</h4>");
+				$("#taken").html("<h4 class=\"no-prof-courses-note\">You have not completed any courses.</h4>");
 			};
 		});
 	});
@@ -77,14 +77,14 @@ $(document).ready(function() {
 		};
 		$("#taken").append(course_info);
 		$('*[data-course-id =' + courseId + ']').remove();
-		$("#add-here-" + courseId).append("<button type=\"button\" class=\"btn btn-danger btn-xs remove-course\" id=" + this.id + ">Remove</button><br><br>");
+		$("#add-here-" + courseId).append("<button type=\"button\" class=\"btn btn-info btn-xs remove-course\" id=" + this.id + ">Remove</button><br><br>");
 		$.post("/move_to_taken", {'id': courseId, 'origin': 'enrolled'}, function(data) {
 			$("#unenroll-msg").html("You have moved this class to your taken courses list!");
 			$(function() {
 				$("#unenroll-msg").delay(2500).fadeOut();
 			});
 			if (data.course_no[0] === 0) {
-				$("#enrolled").html("<h4>You are not currently enrolled in any courses.</h4>");
+				$("#enrolled").html("<h4 class=\"no-prof-courses-note\">You are not currently enrolled in any courses.</h4>");
 			};
 		});
 	});
@@ -97,7 +97,7 @@ $(document).ready(function() {
 				$("#unenroll-msg").delay(2500).fadeOut();
 			});
 			if (data.course_no[0] === 0) {
-				$("#enrolled").html("<h4>You are not currently enrolled in any courses.</h4>");
+				$("#enrolled").html("<h4 class=\"no-prof-courses-note\">You are not currently enrolled in any courses.</h4>");
 			};
 		});
 	});
@@ -105,7 +105,3 @@ $(document).ready(function() {
 		$("#" + this.id.slice(0, -8)).toggle();
 	});
 });
-
-// $(function() {
-// 	$(".no-prof-courses-note").delay(2500).fadeOut();
-// });

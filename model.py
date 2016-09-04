@@ -158,7 +158,8 @@ def example_data():
 					source="Udemy")
 
 	user = User(user_id="1", fname="Jane", lname="Doe", 
-				email="jane@email.com",	password="pass")
+				email="jane@email.com",	
+				password="ccc9c73a37651c6b35de64c3a37858ccae045d285f57fffb409d251d")
 
 	course_favorited = Course_Favorited(id="1", user_id="1", course_id="1")
 

@@ -1,15 +1,18 @@
 {% extends 'base.html' %}
-{% block title %}Register for Emily's Online Courses{% endblock %}
+{% block title %}Register for ClassAmass{% endblock %}
 {% block content %}
-	<div id="register-div">
-	<form action="/register" id="rgstr-form" method="POST">
-		<h3>Sign up now!</h3>
-		First Name: <input type="text" name="fname" required></input><br>
-		Last Name: <input type="text" name="lname" required></input><br>
-		email address: <input type="text" name="email" required></input><br>
-		password: <input type="password" name="password" required></input><br>
-		<input id="rgstr-btn" type="submit" value="Sign up">
+	<div id="register-div" class="container">
+	<form action="/register" class="form-signin" method="POST">
+		<h2 class="form-signin-heading">Sign up now</h2>
+		<label for="fname" class="sr-only">First name</label>
+			<input type="text" name="fname" class="form-control" placeholder="First name" required></input>
+		<label for="lname" class="sr-only">Last name</label>
+			<input type="text" name="lname" class="form-control" placeholder="Last name" required></input>
+		<label for="email" class="sr-only">Email address</label>
+			<input type="email" name="email" id="email" class="form-control" placeholder="Email adress" required></input>
+		<label for="password" class="sr-only">Password</label>
+			<input type="password" name="password" class="form-control" placeholder="Password" required></input>
+		<button id="login-submit" class="btn btn-lg btn-primary btn-block" type="submit" value="Sign up">Sign up</button>
 	</form>
-	<span id="register-msg"></span>
 	</div>
 {% endblock %}

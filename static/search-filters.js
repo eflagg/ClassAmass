@@ -83,7 +83,7 @@ $("#filters").on('click', function(evt) {
 			taken();
 			enrolled();
 		} else if ($.isEmptyObject(course_dict) == true) {
-			$("#main-search-div").append("<p>Sorry, we couldn't find any courses that matched your description! Please adjust your filters or <a href=\"/\">try another search.</a></p>");
+			$("#main-search-div").append("<div id =\"sorry-none\" class=\"container\"><h4>Sorry, we couldn't find any courses that matched your description! Please adjust your filters or <a href=\"/\">try another search.</a></h4></div>");
 		};
 	});
 });

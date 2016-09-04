@@ -1,4 +1,5 @@
 from server import app, get_language_count
+from flask import session
 import unittest
 from model import db, connect_to_db, Course, example_data
 from helpers import get_user_by_email, get_user_by_session, is_favorited, is_taken, is_enrolled
@@ -10,7 +11,7 @@ class FlaskTests(unittest.TestCase):
 
 		self.client = app.test_client()
 		app.config['TESTING'] = True
-		# app.config['SECRET_KEY'] = 'key'
+		app.config['SECRET_KEY'] = 'key'
 
 	def test_index(self):
 		"""Test for main search page."""
@@ -27,7 +28,7 @@ class FlaskTests(unittest.TestCase):
 		client = app.test_client()
 		result = self.client.get("/register")
 		self.assertEqual(result.status_code, 200)
-		self.assertIn("<h3>Sign up now!</h3>", result.data)
+		self.assertIn("Sign up now", result.data)
 
 
 	def test_login_form(self):
@@ -36,7 +37,7 @@ class FlaskTests(unittest.TestCase):
 		client = app.test_client()
 		result = self.client.get("/login")
 		self.assertEqual(result.status_code, 200)
-		self.assertIn("<h3>Log in!</h3>", result.data)
+		self.assertIn("Please log in", result.data)
 
 
 class FlaskDBTests(unittest.TestCase):
@@ -106,10 +107,37 @@ class FlaskDBTests(unittest.TestCase):
 		assert is_enrolled(jane, 1) is False
 
 
+	def test_search(self):
+		"""Test for initial search results."""
 
-		# assert get_user_by_email("jane@email.com"). "<User id=1, fname=Jane, lname=Doe>"
+		result = self.client.get("/search", data={"search": "biology"}, 
+								follow_redirects=True)
+		self.assertIn("Advanced Biology", result.data)
+		# self.assertNotIn("Art", result.data)
 
 
+	def test_login(self):
+		"""Test login process."""
+
+		result = self.client.post("/login", data={"email": "jane@email.com", 
+													"password": "pass"},
+													follow_redirects=True)
+		self.assertIn("Hi Jane", result.data)
+		self.assertIn("Advanced Biology", result.data)
+		self.assertIn("Intro to Art History", result.data)
+		self.assertIn("You are currently not enrolled in any courses.", 
+						result.data)
+	
+
+	def test_lang_count(self):
+
+		get_language_count("biology")
+		assert lang_counts['en'] == 1
+		assert lang_counts['zh'] == 0
+
+
+	def test_bookmark(self):
+		"""Test adding a course to enrolled."""
 	# def test_logout(self):
 	# 	"""Test for registration page."""
 
@@ -119,14 +147,6 @@ class FlaskDBTests(unittest.TestCase):
 	# 			result = self.client.get("/logout")
 	# 			self.assertEqual(result.status_code, 200)
 	# 			self.assertIn("You have successfully logged out.", result.data)
-
-	# def test_search(self):
-	# 	"""Test initial search results."""
-
-	# 	client = app.test_client()
-	# 	result = self.client.get("/search", data={'search': 'biology'})
-	# 	self.assertEqual(result.status_code, 200)
-	# 	self.assertIn(" ", result.data)
 
 
 # class MyAppUnitTestCase(unittest.TestCase):

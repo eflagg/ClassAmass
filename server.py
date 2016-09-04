@@ -235,8 +235,6 @@ def show_user_page():
 
     email = session.get("current_user")
 
-    print '$$$', email
-
     if email:
         user = get_user_by_email(email)
         fav_courses = db.session.query(User.user_id,Course.title,Course.url,
@@ -263,7 +261,7 @@ def show_user_page():
 
 
 @app.route("/bookmark", methods=["POST"])
-def favorite_course():
+def bookmark_course():
     """Add favorited course of user to courses_favorited table."""
 
     if is_user(): 
