@@ -321,7 +321,7 @@ def unfavorite_course():
 
 
 @app.route("/move_to_taken", methods=["POST"])
-def move_course_from_fav_to_taken_list():
+def move_course_from_to_taken_list():
     """Move favorited course of user from courses_favorited table to 
         courses_taken table.
     """
@@ -329,15 +329,50 @@ def move_course_from_fav_to_taken_list():
     course_id = request.form.get("id")
     email = session.get("current_user")
     user = get_user_by_email(email)
-    fav_course = Course_Favorited.query.filter_by(user_id=user.user_id, 
+
+    if request.form.get("origin") == "fav":
+        fav_course = Course_Favorited.query.filter_by(user_id=user.user_id, 
                                                 course_id=course_id).first()
-    db.session.delete(fav_course)
+        db.session.delete(fav_course)
+        db.session.commit()
+        num_courses = db.session.query(func.count("*")).select_from(Course_Favorited
+                                    ).filter_by(user_id=user.user_id).one()
+    elif request.form.get("origin") == "enrolled":
+        enrolled_course = Course_Taking.query.filter_by(user_id=user.user_id, 
+                                                course_id=course_id).first()
+        db.session.delete(enrolled_course)
+        db.session.commit()
+        num_courses = db.session.query(func.count("*")).select_from(Course_Taking
+                                    ).filter_by(user_id=user.user_id).one()
+
     taken_course = Course_Taken(user_id=user.user_id, course_id=course_id)
     db.session.add(taken_course)
     db.session.commit()
 
+    return jsonify({"course_no": num_courses})
+
+
+@app.route("/move_to_enrolled", methods=["POST"])
+def move_course_from_fav_to_enrolled_list():
+    """Move favorited course of user from courses_favorited table to 
+        courses_taken table.
+    """
+
+    course_id = request.form.get("id")
+    email = session.get("current_user")
+    user = get_user_by_email(email)
+
+    fav_course = Course_Favorited.query.filter_by(user_id=user.user_id, 
+                                            course_id=course_id).first()
+    db.session.delete(fav_course)
+
+    enrolled_course = Course_Taking(user_id=user.user_id, course_id=course_id)
+    db.session.add(enrolled_course)
+    db.session.commit()
+
     num_courses = db.session.query(func.count("*")).select_from(Course_Favorited
                                     ).filter_by(user_id=user.user_id).one()
+
 
     return jsonify({"course_no": num_courses})
 
@@ -360,11 +395,29 @@ def remove_taken_course():
     return jsonify({"course_no": num_courses})
 
 
+@app.route("/remove_from_enrolled", methods=["POST"])
+def remove_enrolled_course():
+    """Remove taken course of user from courses_taken table."""
+
+    course_id = request.form.get("id")
+    email = session.get("current_user")
+    user = get_user_by_email(email)
+    course = Course_Taking.query.filter_by(user_id=user.user_id, 
+                                            course_id=course_id).first()
+    db.session.delete(course)
+    db.session.commit()
+
+    num_courses = db.session.query(func.count("*")).select_from(Course_Taking
+                                    ).filter_by(user_id=user.user_id).one()
+
+    return jsonify({"course_no": num_courses})
+
+
 if __name__ == "__main__":
     app.debug = True
 
     connect_to_db(app)
 
-    DebugToolbarExtension(app)
+    # DebugToolbarExtension(app)
 
     app.run(host="0.0.0.0")

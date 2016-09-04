@@ -1,7 +1,7 @@
 from server import app, get_language_count
 import unittest
 from model import db, connect_to_db, Course, example_data
-from helpers import get_user_by_email
+from helpers import get_user_by_email, get_user_by_session, is_favorited, is_taken, is_enrolled
 
 class FlaskTests(unittest.TestCase):
 
@@ -51,8 +51,8 @@ class FlaskDBTests(unittest.TestCase):
 		connect_to_db(app, "postgresql:///testdb")
 
 		with self.client as c:
-			with c.session_transaction() as sess:
-				sess['current_user'] = "jane@email.com"
+			with c.session_transaction() as session:
+				session['current_user'] = "jane@email.com"
 
 		db.create_all()
 		example_data()
@@ -70,11 +70,41 @@ class FlaskDBTests(unittest.TestCase):
 		result = self.client.get("/profile", follow_redirects=True)
 		self.assertIn("Jane", result.data)
 
+
 	def test_user_by_email(self):
 
 		jane = get_user_by_email("jane@email.com")
 
 		assert jane.lname == "Doe"
+
+
+	def test_user_by_session(self):
+
+		jane = get_user_by_session()
+
+		assert jane.lname == "Doe"
+
+
+	def test_is_favorited(self):
+
+		jane = get_user_by_email("jane@email.com")
+
+		assert is_favorited(jane, 1) is True
+
+
+	def test_is_taken(self):
+
+		jane = get_user_by_email("jane@email.com")
+
+		assert is_taken(jane, 2) is True
+
+
+	def test_is_enrolled(self):
+
+		jane = get_user_by_email("jane@email.com")
+
+		assert is_enrolled(jane, 1) is False
+
 
 
 		# assert get_user_by_email("jane@email.com"). "<User id=1, fname=Jane, lname=Doe>"

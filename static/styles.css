@@ -1,37 +1,33 @@
-.course-pic {
-	height: 75px;
-	width: 100px;
+body {
+	background: url("/static/books-484766_1920.jpg");
+	background-attachment: fixed;
 }
 
-#search-results {
-	margin-left: 150px;
-	margin-top: 60px;
-	margin-right: 125px;
-	margin-bottom: 50px;
-}
-
-.welcome-note {
+.homepage-div {
+	margin-top: 200px;
 	text-align: center;
-	margin-top: 60px;
 }
 
-.class-heading {
-	margin-left: 50px;
+#search-box{
+	height: 40px;
+	width: 250px;
 }
 
-.profile {
-	margin-left: 200px;
-	margin-right: 1000px;
+#search-button{
+	height: 40px;
+	font-size: 17px;
 }
 
 .navbar-fixed-top {
 	margin-bottom: 0;
+	padding-bottom: 0;
 }
 
 .navbar-fixed-left {
-  margin-top: 20px;
-  padding: 15px; 
-  width: 20%;
+  margin-top: 0;
+  margin-right: 0;
+  padding: 0; 
+  width: 15%;
   position: fixed;
   border-radius: 0;
   height: 100%;
@@ -40,12 +36,12 @@
 
 #form-div {
 	color: white;
-	padding-bottom: 35px;
+	padding-bottom: 100px;
 /*	font-size: 15px;*/
-}
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 10px;
 
-#result-number {
-	text-align: center
 }
 
 #show-lang {
@@ -58,6 +54,43 @@
 	padding: 2px; 
 	color: black;
 	margin-top: 0;
+}
+
+
+#filters {
+	color: black;
+}
+
+#result-number {
+	text-align: center
+}
+
+#search-results {
+	margin-left: 150px;
+	margin-top: 60px;
+	margin-right: 125px;
+	margin-bottom: 50px;
+}
+
+.course-pic {
+	height: 75px;
+	/*width: 100px;*/
+}
+
+.welcome-note {
+	text-align: center;
+	margin-top: 60px;
+}
+.class-heading {
+	margin-left: 50px;
+	height: 50px;
+	width: 175px;
+	border-radius: 0;
+}
+
+.profile {
+	margin-left: 200px;
+	margin-right: 800px;
 }
 
 .img-fluid {
@@ -73,17 +106,6 @@
 .media {
 	border-style: solid;
 	border-width: 1px;
-	margin-left: 250px;
-	margin-right: 50px;
-}
-
-.homepage-div {
-	margin-top: 300px;
-	text-align: center;
-}
-
-#filters {
-	color: black;
 }
 
 .profile-div {
@@ -94,21 +116,27 @@
 	color: black;
 }
 
+#search-phrase {
+	width: 90%;
+}
+
+#price {
+	width: 25%;
+}
+
 #sorry-none {
 	margin-top: 60px;
+	text-align: center;
 }
 
 .side-nav-category {
-	font-size: 16px;
+	font-size: 14px;
 }
 
-input {
+li + input {
 	font-size: 12px;
 }
 
-/*li + input {
-	font-size: 12px;
-}*/
 #course-url {
 	color: inherit;
 	text-decoration: none;
@@ -134,14 +162,23 @@ input {
 
 #login-div {
 	text-align: center;
-	margin-top: 100px;
+	margin-top: 200px;
 }
 
 #register-div {
 	text-align: center;
-	margin-top: 100px;
+	margin-top: 200px;
 }
 
 .well {
-	margin-left: 350px;
+	margin-left: 100px;
+}
+
+.filtered {
+	margin-left: 250px;
+	margin-right: 100px;
+}
+
+.no-prof-courses-note {
+	text-align: center;
 }

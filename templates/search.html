@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Emily's Online Courses Search Results{% endblock %}
+{% block title %}ClassAmass Search Results{% endblock %}
 {% block content %}
 <div class="navbar navbar-inverse navbar-fixed-left">
   <ul class="nav nav-pills nav-stacked" data-spy="affix" data-offset-top="205">
@@ -7,13 +7,13 @@
 	<form action='/search/filters/fake' id="filters-form">
 		<li class="side-nav-category">
 			Search: 
-			<input type="text" class="side-nav-input-text" name="search-phrase" value={{ phrase }}>
+			<input type="text" id="search-phrase" class="side-nav-input-text" name="search-phrase" value={{ phrase }}>
 			</input>
 		</li>
 		<li class="divider"></li><br>
 		<li class="side-nav-category">
 			Max Price: 
-			<input type="number" class="side-nav-input-text" name="price" id="price-field">
+			<input type="number" id="price" class="side-nav-input-text" name="price" id="price-field">
 			</input>
 		</li>
 		<li class="divider"></li><br>
@@ -144,14 +144,14 @@
 				Uzbek (<span id="uz">{{ langs["uz"] }}</span>)
 			</input><br>
 			</span><br>
-			<a id="show-lang">Show More</a>
+			<button type="button" class="btn btn-primary btn-xs" id="show-lang">Show More</button>
 		</li>
 		<li class="divider"></li><br>
 		<li class="side-nav-category">
 			Instructor or Self led:<br>
 			<input type="radio" name="coursetype" value="self">
 				Self Led
-			</input>
+			</input><br>
 			<input type="radio" name="coursetype" value="instructor">
 				Instructor Led
 			</input>
@@ -161,7 +161,7 @@
 			Certificates:<br>
 			<input type="radio" name="certificates" value="yes">
 				Has Certificates
-			</input>
+			</input><br>
 			<input type="radio" name="certificates" value="no-pref">
 				No Preference
 			</input>
@@ -624,7 +624,7 @@
 	<div id="main-search-div">
 	{% if courses == [] %}
 		<div id="sorry-none" class="container">
-			Sorry, we couldn't find any courses that matched your description! <a href="/">Try another search.</a>
+			<h4>Sorry, we couldn't find any courses that matched your description! <a href="/">Try another search.</a></h4>
 		</div>
 	{% else %}
 		<div id="search-results">
