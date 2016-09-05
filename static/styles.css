@@ -90,7 +90,8 @@ body {
 }
 
 #result-number {
-	text-align: center
+	text-align: center;
+	/*margin-left: 200px;*/
 }
 
 #search-results {
@@ -220,6 +221,7 @@ body {
 
 .well {
 	margin-left: 100px;
+	opacity: 0.9;
 }
 
 .filtered {
