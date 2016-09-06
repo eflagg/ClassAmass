@@ -1,5 +1,4 @@
 from server import app, get_language_count
-from flask import session
 import unittest
 from model import db, connect_to_db, Course, example_data
 from helpers import get_user_by_email, get_user_by_session, is_favorited, is_taken, is_enrolled
@@ -41,7 +40,7 @@ class FlaskTests(unittest.TestCase):
 
 
 	def test_bookmark(self):
-		"""Test adding a course to enrolled."""
+		"""Test adding a course to enrolled when not signed in."""
 
 		result = self.client.post("/bookmark", 
 								data={"current_user": None,
@@ -76,14 +75,15 @@ class FlaskDBTests(unittest.TestCase):
 		db.drop_all()
 
 
-	def test_login(self):
-		"""Test query to db to get user from input of email."""
+	def test_profile(self):
+		"""Test profile route when logged in."""
 
 		result = self.client.get("/profile", follow_redirects=True)
 		self.assertIn("Jane", result.data)
 
 
 	def test_user_by_email(self):
+		"""Test query to db to get user from input of email."""
 
 		jane = get_user_by_email("jane@email.com")
 
@@ -91,6 +91,7 @@ class FlaskDBTests(unittest.TestCase):
 
 
 	def test_user_by_session(self):
+		"""Test query to db to get user from session."""
 
 		jane = get_user_by_session()
 
@@ -98,6 +99,7 @@ class FlaskDBTests(unittest.TestCase):
 
 
 	def test_is_favorited(self):
+		"""Query db to see if course is already favorited by user."""
 
 		jane = get_user_by_email("jane@email.com")
 
@@ -106,6 +108,7 @@ class FlaskDBTests(unittest.TestCase):
 
 
 	def test_is_taken(self):
+		"""Query db to see if course has already been taken by user."""
 
 		jane = get_user_by_email("jane@email.com")
 
@@ -115,6 +118,7 @@ class FlaskDBTests(unittest.TestCase):
 
 
 	def test_is_enrolled(self):
+		"""Query db to see if course is currently being taken by user."""
 
 		jane = get_user_by_email("jane@email.com")
 

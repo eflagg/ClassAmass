@@ -157,13 +157,13 @@ def example_data():
 					subcategory="art history", picture="www.picture2.com", 
 					source="Udemy")
 
-	user = User(user_id="1", fname="Jane", lname="Doe", 
+	user = User(fname="Jane", lname="Doe", 
 				email="jane@email.com",	
 				password="ccc9c73a37651c6b35de64c3a37858ccae045d285f57fffb409d251d")
 
-	course_favorited = Course_Favorited(id="1", user_id="1", course_id="1")
+	course_favorited = Course_Favorited(user_id=1, course_id=1)
 
-	course_taken = Course_Taken(id="1", user_id="1", course_id="2")
+	course_taken = Course_Taken(user_id=1, course_id=2)
 
 	db.session.add_all([bio_course, art_hist_course, user, course_favorited, course_taken])
 	db.session.commit()
