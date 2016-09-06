@@ -57,9 +57,11 @@ def show_search_results():
     """Show search results based on user input parameters."""
 
     phrase = request.args.get("search")
+    print "phrase", phrase
     args = [((Course.title.ilike('%' + phrase + '%')) | 
             (Course.category.ilike('%' + phrase + '%')) | 
             (Course.subcategory.ilike('%' + phrase + '%')))]
+    print "hi"
     args = tuple(args)
 
     try:
@@ -86,7 +88,7 @@ def filter_results():
     certificates = request.args.get("certificates")
     source = request.args.get("source")
     university = request.args.getlist("university")
-    phrase = request.args.get("search-phrase", session['search-phrase'])
+    phrase = request.args.get("search", session['search-phrase'])
 
     q = db.session.query(Course, Course.course_id)
 
@@ -319,9 +321,9 @@ def unfavorite_course():
 
 
 @app.route("/move_to_taken", methods=["POST"])
-def move_course_from_to_taken_list():
-    """Move favorited course of user from courses_favorited table to 
-        courses_taken table.
+def move_course_to_taken_list():
+    """Move favorited course or enrolled course of user from courses_favorited 
+        table or courses_taking table to courses_taken table.
     """
 
     course_id = request.form.get("id")

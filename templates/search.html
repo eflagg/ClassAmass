@@ -6,23 +6,23 @@
     <div id="form-div">
 	<form action='/search/filters/fake' id="filters-form">
 		<li class="side-nav-category">
-			<span class="filter-cat">Search</span> 
-			<input type="text" id="search-phrase" class="side-nav-input-text text form-control" name="search-phrase" value="{{ phrase }}">
+			<span class="filter-cat">SEARCH</span> 
+			<input type="text" id="search" class="input-sm side-nav-input-text text form-control" name="search-phrase" value="{{ phrase }}">
 			</input>
 		</li>
 		<li class="divider"></li><br>
 		<li class="side-nav-category">
-			<span class="filter-cat">Max Price</span>
+			<span class="filter-cat">MAX PRICE</span>
 			<div class="input-group">
 				<span class="input-group-addon">$</span>
-				<input type="number" id="price" step="5" min="0" class="side-nav-input-text form-control" placeholder="price">
+				<input type="number" id="price" step="5" min="0" class="input-sm side-nav-input-text form-control" placeholder="price">
 			</div>
 <!-- 			<input type="number" id="price" class="side-nav-input-text" name="price" step="5" id="price-field">
 			</input> -->
 		</li>
 		<li class="divider"></li><br>
 		<li id="languages-side-nav" class="side-nav-category">
-			<span class="filter-cat">Languages</span><br>
+			<span class="filter-cat">LANGUAGES</span><br>
 			<input type="checkbox" name="languages" value="en" >
 				English (<span id="en">{{ langs["en"] }}</span>)
 			</input><br>
@@ -148,11 +148,11 @@
 				Uzbek (<span id="uz">{{ langs["uz"] }}</span>)
 			</input><br>
 			</span><br>
-			<button type="button" class="btn btn-primary btn-xs" id="show-lang">Show More</button>
+			<button type="button" class="btn show-more btn-xs" id="show-lang">Show More</button>
 		</li>
 		<li class="divider"></li><br>
 		<li class="side-nav-category">
-			<span class="filter-cat">Instructor or Self led</span><br>
+			<span class="filter-cat">PACE</span><br>
 			<input type="radio" name="coursetype" value="self">
 				Self Led
 			</input><br>
@@ -162,7 +162,7 @@
 		</li>
 		<li class="divider"></li><br>
 		<li class="side-nav-category">
-			<span class="filter-cat">Certificates</span><br>
+			<span class="filter-cat">CERTIFICATE</span><br>
 			<input type="radio" name="certificates" value="yes">
 				Has Certificates
 			</input><br>
@@ -172,7 +172,7 @@
 		</li>
 		<li class="divider"></li><br>
 		<li class="side-nav-category">
-			<span class="filter-cat">Source</span><br>
+			<span class="filter-cat">SOURCE</span><br>
 			<input type="checkbox" name="source" value="Coursera">
 				Coursera
 			</input>
@@ -181,7 +181,7 @@
 			</input></li>
 		<li class="divider"></li><br>
 		<li class="side-nav-category">
-			<span class="filter-cat">Universities</span><br>
+			<span class="filter-cat">UNIVERSITIES</span><br>
 			<input type="checkbox" name="university" value="6">
 				University of Pennsylvania
 			</input><br>
@@ -616,10 +616,10 @@
 				Yeshiva University
 			</input><br>
 			</span><br>
-			<button id="show-uni" type="button" class="btn btn-primary btn-xs">Show More</button><br>
+			<button id="show-uni" type="button" class="btn show-more btn-xs">Show More</button><br>
 		</li>
 		<li class="divider"></li><br>
-		<input type="submit" id="filters" value="Apply Filters"></input>
+		<button type="submit" class="btn form-control btn-block" id="filters" value="Apply Filters">Apply Filters</button>
 	</form>
 	</div>
 	</ul>
@@ -637,13 +637,15 @@
 			{% for course in courses %}
 			<div class="media well">
   				<div class="media-left media-middle">
+  					<a href="{{ course.url }}" id="course-url" target="_blank">
       				<img class="media-object" src="{{ course.picture }}" alt="course pic">
+      				</a>
   				</div>
   			<div class="media-body">
   				<a href="{{ course.url }}" id="course-url" target="_blank">
     			<h4 class="media-heading">{{ course.title }}</h4>
-    			{% if course.source == "Coursera" %}
-    			<p>{{ course.description[:350] }}</p>
+    			{% if course.source == "Coursera" and course.description|length > 349 %}
+    			<p>{{ course.description[:350] }}...</p>
     			{% else %}
     			<p>{{ course.headline }}</p>
     			{% endif %}
@@ -656,9 +658,9 @@
      			{% else%}
      				Free
      			{% endif %}</p></a>
-     			<button type="button" id="{{ course.course_id }}" class="btn btn-danger favorite-button btn-xs">Favorite</button>
-     			<button type="button" id="{{ course.course_id }}" class="btn btn-success taken-button btn-xs">Taken</button>
-     			<button type="button" id="{{ course.course_id }}" class="btn btn-success enrolled-button btn-xs">Enrolled</button><p id="btn-response-msg-{{ course.course_id }}"></p>
+     			<button type="button" id="{{ course.course_id }}" class="btn  favorite-button btn-xs">Favorite</button>
+     			<button type="button" id="{{ course.course_id }}" class="btn taken-button btn-xs">Taken</button>
+     			<button type="button" id="{{ course.course_id }}" class="btn  enrolled-button btn-xs">Enrolled</button><p id="btn-response-msg-{{ course.course_id }}"></p>
   			</div>
 			</div>
 			{% endfor %}

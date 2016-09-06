@@ -15,10 +15,10 @@
   </ul>
 </div> -->
 	<div class="profile-div">
-		<h3 class="welcome-note">Hi {{ user.fname }}, welcome to ClassAmass!
-			<a href="/">Start searching for classes.</a>
+		<h3 class="welcome-note">Hi {{ user.fname }}, welcome to <span class="brand">ClassAmass</span>!
+			<a id="start-searching" href="/">Start searching for classes.</a>
 		</h3>
-		<button type="button" id="enrolled-heading" class="btn btn-primary class-heading btn-xl">Currently Enrolled</button><br><br>
+		<button type="button" id="enrolled-heading" class="btn class-heading btn-xl">Currently Enrolled</button><br><br>
 		{% if enrolled_courses %}
 		<div id="enrolled">
 			<!-- <button type="button" id="enrolled-heading" class="btn btn-default class-heading btn-xl">Currently Enrolled:</button><br> -->
@@ -32,8 +32,8 @@
 	  				</div>
 	  				<div id="add-here-{{ course.course_id }}" class="media-body">
 	    				<h4 class="media-heading">{{ course.title }}</h4>
-	    				<button type="button" class="btn btn-info btn-xs completed-button" data-course-id="{{ course.course_id }}">Completed</button>
-						<button type="button" class="btn btn-info btn-xs unenroll" data-course-id="{{ course.course_id }}">Remove</button>
+	    				<button type="button" class="btn btn-xs completed-button" data-course-id="{{ course.course_id }}">Completed</button>
+						<button type="button" class="btn btn-xs unenroll" data-course-id="{{ course.course_id }}">Remove</button>
 					</div>
 				</div>
 			</div>
@@ -45,7 +45,7 @@
 	</div>		
 	{% endif %}
 	<div id="unenroll-msg"></div>
-	<button type="button" id="favorite-heading" class="btn btn-primary class-heading btn-xl">Favorites</button><br><br>
+	<button type="button" id="favorite-heading" class="btn class-heading btn-xl">Favorites</button><br><br>
 	{% if fav_courses %}
 		<div id="favorite">		
 		<!-- <h3 id="fav-heading" class="class-heading">Favorites:</h3><br> -->
@@ -59,9 +59,9 @@
   				</div>
   				<div id="add-here-{{ course.course_id }}" class="media-body">
     				<h4 class="media-heading">{{ course.title }}</h4>
-					<button type="button" class="btn btn-info btn-xs taken-button" data-course-id="{{ course.course_id }}">Completed</button>
-					<button type="button" class="btn btn-info btn-xs enrolled-button" data-course-id="{{ course.course_id }}">Enrolled</button>
-					<button type="button" class="btn btn-info btn-xs unfavorite-button" data-course-id="{{ course.course_id }}">Remove</button>
+					<button type="button" class="btn btn-xs taken-button" data-course-id="{{ course.course_id }}">Completed</button>
+					<button type="button" class="btn btn-xs enrolled-button" data-course-id="{{ course.course_id }}">Enrolled</button>
+					<button type="button" class="btn btn-xs unfavorite-button" data-course-id="{{ course.course_id }}">Remove</button>
 				</div>
 			</div>
 		</div>
@@ -73,7 +73,7 @@
 		</div>			
 	{% endif %}
 	<div id="unfav-msg"></div>
-	<button type="button" id="taken-heading" class="btn btn-primary class-heading btn-xl">Past Courses</button><br><br>
+	<button type="button" id="taken-heading" class="btn class-heading btn-xl">Past Courses</button><br><br>
 	{% if taken_courses %}
 		<div id="taken">
 			<!-- <h3 id="taken-heading" class="class-heading">Past Courses:</h3><br> -->
@@ -87,7 +87,7 @@
 	  				</div>
 	  				<div class="media-body">
 	    				<h4 class="media-heading">{{ course.title }}</h4>
-						<button type="button" class="btn btn-info btn-xs remove-course" data-course-id="{{ course.course_id }}">Remove</button>
+						<button type="button" class="btn btn-xs remove-course" data-course-id="{{ course.course_id }}">Remove</button>
 					</div>
 				</div>
 			</div>
