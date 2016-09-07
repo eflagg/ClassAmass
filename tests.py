@@ -56,6 +56,8 @@ class FlaskDBTests(unittest.TestCase):
 	def setUp(self):
 		"""Set up by creating testdb and fake client."""
 
+		# import os
+		# os.system("createdb testdb")
 		self.client = app.test_client()
 		app.config['TESTING'] = True
 		app.config['SECRET_KEY'] = 'key'
@@ -71,8 +73,10 @@ class FlaskDBTests(unittest.TestCase):
 	def tearDown(self):
 		"""Tear down by droping testdb."""
 
+		# import os
 		db.session.close()
 		db.drop_all()
+		# os.system("dropdb testdb")
 
 
 	def test_profile(self):
@@ -90,14 +94,6 @@ class FlaskDBTests(unittest.TestCase):
 		assert jane.lname == "Doe"
 
 
-	def test_user_by_session(self):
-		"""Test query to db to get user from session."""
-
-		jane = get_user_by_session()
-
-		assert jane.lname == "Doe"
-
-
 	def test_is_favorited(self):
 		"""Query db to see if course is already favorited by user."""
 
@@ -105,6 +101,7 @@ class FlaskDBTests(unittest.TestCase):
 
 		assert is_favorited(jane, 1) is True
 		assert is_favorited(jane, 2) is False
+		assert is_favorited(jane, 3) is False
 
 
 	def test_is_taken(self):
@@ -114,6 +111,7 @@ class FlaskDBTests(unittest.TestCase):
 
 		assert is_taken(jane, 2) is True
 		assert is_taken(jane, 1) is False
+		assert is_taken(jane, 3) is False
 
 
 
@@ -123,14 +121,15 @@ class FlaskDBTests(unittest.TestCase):
 		jane = get_user_by_email("jane@email.com")
 
 		assert is_enrolled(jane, 1) is False
+		assert is_enrolled(jane, 2) is False
+		assert is_enrolled(jane, 3) is True
 
 
 	def test_search(self):
 		"""Test for initial search results."""
 
-		result = self.client.get("/search", data={"search": "biology"})
+		result = self.client.get("/search?search=biology")
 		self.assertIn("Advanced Biology", result.data)
-		# self.assertNotIn("Art", result.data)
 
 
 	def test_login(self):
@@ -142,8 +141,7 @@ class FlaskDBTests(unittest.TestCase):
 		self.assertIn("Hi Jane", result.data)
 		self.assertIn("Advanced Biology", result.data)
 		self.assertIn("Intro to Art History", result.data)
-		self.assertIn("You are currently not enrolled in any courses.", 
-						result.data)
+		self.assertIn("Intermediate Python", result.data)
 
 
 	def test_wrong_password(self):
@@ -156,8 +154,8 @@ class FlaskDBTests(unittest.TestCase):
 		self.assertIn("Incorrect password", result.data)
 
 
-	def test_wrong_password(self):
-		"""Test wrong password at login."""
+	def test_wrong_email(self):
+		"""Test wrong email at login."""
 
 		result = self.client.post("/login", data={"email": "notjane@email.com", 
 													"password": "pass"},
@@ -193,15 +191,9 @@ class FlaskDBTests(unittest.TestCase):
 
 		self.assertIn("You already have an account", result.data)
 
-	def test_lang_count(self):
 
-		get_language_count("biology")
-		assert lang_counts['en'] == 1
-		assert lang_counts['zh'] == 0
-
-
-	def test_bookmark(self):
-		"""Test adding a course to enrolled."""
+	def test_fail_fav_bookmark(self):
+		"""Test adding an already added course to bookmarks."""
 
 		result = self.client.post("/bookmark", 
 								data={"current_user": "jane@email.com",
@@ -209,14 +201,49 @@ class FlaskDBTests(unittest.TestCase):
 		self.assertIn("You have already added this", result.data)
 
 
-	def test_bookmark(self):
-		"""Test adding a course to enrolled."""
+	def test_fail_taken_bookmark(self):
+		"""Test adding an already added course to bookmarks."""
 
 		result = self.client.post("/bookmark", 
 								data={"current_user": "jane@email.com",
 								"id": 2}, follow_redirects=True)
 		self.assertIn("You have already added this", result.data)
 
+
+	def test_fail_enrolled_bookmark(self):
+		"""Test adding an already added course to bookmarks."""
+
+		result = self.client.post("/bookmark", 
+								data={"current_user": "jane@email.com",
+								"id": 3}, follow_redirects=True)
+		self.assertIn("You are currently enrolled", result.data)
+
+
+	def test_enrolled_bookmark(self):
+		"""Test adding an already added course to bookmarks."""
+
+		result = self.client.post("/bookmark", 
+								data={"current_user": "jane@email.com",
+								"id": 4, "action": "enrolled"}, follow_redirects=True)
+		self.assertIn("You have successfully added this", result.data)
+
+
+	def test_favorite_bookmark(self):
+		"""Test adding an already added course to bookmarks."""
+
+		result = self.client.post("/bookmark", 
+								data={"current_user": "jane@email.com",
+								"id": 4, "action": "fav"}, follow_redirects=True)
+		self.assertIn("You have successfully added this", result.data)
+
+
+	def test_taken_bookmark(self):
+		"""Test adding an already added course to bookmarks."""
+
+		result = self.client.post("/bookmark", 
+								data={"current_user": "jane@email.com",
+								"id": 4, "action": "taken"}, follow_redirects=True)
+		self.assertIn("You have successfully added this", result.data)
 
 	def test_unfavorite(self):
 		"""Test removing a favorited course from database."""
@@ -235,12 +262,22 @@ class FlaskDBTests(unittest.TestCase):
 		self.assertIn("You have successfully logged out.", result.data)
 
 
-	def test_move_to_taken(self):
+	def test_fav_to_taken(self):
 		"""Test moving course from fav to taken."""
 
 		result = self.client.post("/move_to_taken", 
 								data={"current_user": "jane@email.com",
 								"id": 1, "origin": "fav"}, 
+								follow_redirects=True)
+		self.assertIn("0", result.data)
+
+
+	def test_taking_to_taken(self):
+		"""Test moving course from enrolled to taken."""
+
+		result = self.client.post("/move_to_taken", 
+								data={"current_user": "jane@email.com",
+								"id": 3, "origin": "enrolled"}, 
 								follow_redirects=True)
 		self.assertIn("0", result.data)
 
@@ -261,6 +298,16 @@ class FlaskDBTests(unittest.TestCase):
 								data={"current_user": "jane@email.com",
 								"id": 2}, follow_redirects=True)
 		self.assertIn("0", result.data)
+
+
+	def test_remove_from_enrolled(self):
+		"""Test removing course from courses_taken table."""
+
+		result = self.client.post("/remove_from_enrolled", 
+								data={"current_user": "jane@email.com",
+								"id": 3}, follow_redirects=True)
+		self.assertIn("0", result.data)
+
 
 if __name__ == '__main__':
     unittest.main()

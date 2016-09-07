@@ -156,16 +156,32 @@ def example_data():
 					has_certificates=False, category="history", 
 					subcategory="art history", picture="www.picture2.com", 
 					source="Udemy")
+	python_course = Course(course_id=3, title="Intermediate Python", course_type="instructor",
+					 description="An intermediate course of python concepts", 
+					 url="www.course3.com", language="ja", 
+					 subtitles=["en", "it"], workload="12 weeks, 1-2hr/week", 
+					has_certificates=True, category="computer science", 
+					subcategory="programming", picture="www.picture3.com", 
+					source="Udemy")
+	chinese_course = Course(course_id=4, title="Chinese Writing", course_type="self",
+					 description="Learn 4000 Chinese characters", 
+					 url="www.course4.com", language="zh", 
+					 subtitles=["en", "ko"], workload="8 weeks, 3hr/week", 
+					has_certificates=False, category="language", 
+					subcategory="Chinese", picture="www.picture4.com", 
+					source="Coursera")
 
-	user = User(fname="Jane", lname="Doe", 
+	user = User(user_id=1, fname="Jane", lname="Doe", 
 				email="jane@email.com",	
 				password="ccc9c73a37651c6b35de64c3a37858ccae045d285f57fffb409d251d")
 
-	course_favorited = Course_Favorited(user_id=1, course_id=1)
+	course_favorited = Course_Favorited(id=1, user_id=1, course_id=1)
 
-	course_taken = Course_Taken(user_id=1, course_id=2)
+	course_taken = Course_Taken(id=2, user_id=1, course_id=2)
 
-	db.session.add_all([bio_course, art_hist_course, user, course_favorited, course_taken])
+	course_taking = Course_Taking(id=3, user_id=1, course_id=3)
+
+	db.session.add_all([bio_course, art_hist_course, python_course, user, course_favorited, course_taken, course_taking])
 	db.session.commit()
 
 

@@ -12,6 +12,10 @@ a .navbar-brand {
 	color: rgb(218, 77, 87);
 }
 
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+	color: rgb(168, 37, 34) !important;
+}
 
 .brand {
 	font-family: 'Lobster', cursive;
@@ -54,7 +58,7 @@ a .navbar-brand {
 .navbar-fixed-top {
 	margin-bottom: 0;
 	padding-bottom: 0;
-	opacity: 0.9;
+	opacity: 0.95;
 }
 
 .navbar-fixed-left {
@@ -66,6 +70,7 @@ a .navbar-brand {
   border-radius: 0;
   height: 100%;
   overflow-y: auto;
+  opacity: 0.9;
 }
 
 #form-div {
@@ -88,7 +93,7 @@ a .navbar-brand {
 }
 
 #price {
-	width: 90%;
+	width: 98%;
 	/*height: 10%*/
 }
 
@@ -108,10 +113,12 @@ a .navbar-brand {
 .show-more {
 	background: #222222;
 	border-color: rgb(170, 180, 193);
+	border-style: dotted;
 }
 
 .show-more:hover {
 	background: #222222;
+	background: gray;
 }
 
 #show-lang {
@@ -128,7 +135,7 @@ a .navbar-brand {
 
 #result-number {
 	text-align: center;
-	/*margin-left: 200px;*/
+	/*margin-top: 80px;*/
 }
 
 #search-results {

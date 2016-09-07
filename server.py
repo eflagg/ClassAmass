@@ -57,11 +57,9 @@ def show_search_results():
     """Show search results based on user input parameters."""
 
     phrase = request.args.get("search")
-    print "phrase", phrase
     args = [((Course.title.ilike('%' + phrase + '%')) | 
             (Course.category.ilike('%' + phrase + '%')) | 
             (Course.subcategory.ilike('%' + phrase + '%')))]
-    print "hi"
     args = tuple(args)
 
     try:
@@ -414,7 +412,7 @@ def remove_enrolled_course():
 
 
 if __name__ == "__main__":
-    app.debug = True
+    # app.debug = True
 
     connect_to_db(app)
 
