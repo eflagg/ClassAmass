@@ -23,15 +23,15 @@ Users input a search term which is sent to the Flask server where a SQLAlchemy q
 
 **Filtered Search Results**
 
-<img src="src=/static/ClassAmass_search.png">
+<img src="/static/ClassAmass_search.png">
 
 **User Profile Page-- Currently Enrolled and Favorited**
 
-<img src="src=/static/ClassAmass_profile.png">
+<img src="/static/ClassAmass_profile.png">
 
 **User Profile Page-- Past Courses**
 
-<img src="src=/static/ClassAmass_profile2.png">
+<img src="/static/ClassAmass_profile2.png">
 
 
 ### Technology Stack
