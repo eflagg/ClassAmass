@@ -23,9 +23,9 @@ Users input a search term which is sent to the Flask server where a SQLAlchemy q
 
 **Filtered Search Results**
 
-<img src="/static/ClassAmass_search.png">
+<img src="/static/ClassAmass_filtered_search.png">
 
-**User Profile Page-- Currently Enrolled and Favorited**
+**User Profile Page-- Currently Enrolled and Favorites**
 
 <img src="/static/ClassAmass_profile.png">
 
