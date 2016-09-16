@@ -417,5 +417,6 @@ if __name__ == "__main__":
     connect_to_db(app)
 
     # DebugToolbarExtension(app)
+    PORT = int(os.environ.get("PORT", 5000))
 
-    app.run(host="0.0.0.0")
+    app.run(host="0.0.0.0", port=PORT)
