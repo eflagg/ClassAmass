@@ -4,3 +4,5 @@ secrets.sh
 api_tests.py
 udemy_seed.py
 /htmlcov/
+.coverage
+q
