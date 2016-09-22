@@ -5,6 +5,7 @@ from helpers import get_user_by_email, get_user_by_session, is_favorited, is_tak
 import hashlib
 from sqlalchemy import func
 import dictalchemy
+import os
 
 app = Flask(__name__)
 
