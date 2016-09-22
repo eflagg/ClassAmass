@@ -6,3 +6,4 @@ udemy_seed.py
 /htmlcov/
 .coverage
 q
+*.sql
